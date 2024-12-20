@@ -27,14 +27,14 @@ MIDDLEWARE = [
     "app.contrib.health_check.middleware.MaintenanceMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "app.contrib.dumper.middleware.RequestDumperMiddleware",
+    "app.contrib.request_logging.middleware.RequestLoggingMiddleware",
+    "app.contrib.security.middleware.SecurityHeadersMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 # django-debug-toolbar
 INTERNAL_IPS = [
     "127.0.0.1",
-    "0.0.0.0",
     "localhost",
 ]
 DEBUG_TOOLBAR_PANELS = [

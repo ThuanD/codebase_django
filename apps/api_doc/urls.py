@@ -1,8 +1,8 @@
 from django.urls import path
 from drf_spectacular.views import (
+    SpectacularJSONAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
-    SpectacularJSONAPIView,
 )
 
 app_name = "api_doc"

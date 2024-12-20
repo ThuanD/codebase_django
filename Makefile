@@ -1,4 +1,4 @@
-.PHONY: init update-deps secret_key static migrate cache test run-hooks run gunicorn shell
+.PHONY: init update-deps secret_key static migrate cache test run gunicorn shell run-hooks
 init:
 	poetry install --no-root --all-extras
 
@@ -21,9 +21,6 @@ test:
 	poetry run coverage run --source='.' manage.py test --settings=app.settings.local_test
 	poetry run coverage html
 
-run-hooks:
-	poetry run pre-commit run --all-files --show-diff-on-failure
-
 run:
 	poetry run python manage.py runserver
 
@@ -32,3 +29,15 @@ gunicorn:
 
 shell:
 	poetry run python manage.py shell_plus
+
+isort:
+	poetry run isort .
+
+black:
+	poetry run black .
+
+flake8:
+	poetry run flake8
+
+hooks:
+	poetry run pre-commit run --all-files

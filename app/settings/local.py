@@ -27,7 +27,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "app.contrib.dumper.middleware.RequestDumperMiddleware",
+    "app.contrib.request_logging.middleware.RequestLoggingMiddleware",
+    "app.contrib.security.middleware.SecurityHeadersMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
@@ -48,7 +49,6 @@ CACHES = {
 # django-debug-toolbar
 INTERNAL_IPS = [
     "127.0.0.1",
-    "0.0.0.0",
     "localhost",
 ]
 DEBUG_TOOLBAR_PANELS = [
@@ -82,7 +82,7 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/",
 }
 
-LOGGING = {}
+# LOGGING = {}
 
 # django-constance
 CONSTANCE_BACKEND = "constance.backends.memory.MemoryBackend"
