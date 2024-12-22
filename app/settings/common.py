@@ -38,6 +38,9 @@ IS_PRODUCTION = django_settings_module == "app.settings.production"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+# Load and validate security configuration
+# security_config = EnvConfigManager(SecurityConfig).get_config()
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
@@ -94,8 +97,17 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "app.contrib.dumper.middleware.RequestDumperMiddleware",
+    "app.contrib.request_logging.middleware.RequestLoggingMiddleware",
+    "app.contrib.security.middleware.SecurityHeadersMiddleware",
 ]
+
+# Session security
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Strict"
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = "Strict"
 
 ROOT_URLCONF = "app.urls"
 APPEND_SLASH = True
@@ -140,10 +152,13 @@ CACHES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # NOQA NOSONAR
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 12,
+        },
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
@@ -212,50 +227,62 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(asctime)s: %(name)s:%(lineno)d %(process)d %(thread)d "
-            "[%(levelname)s] - %(message)s"
+            "format": "[%(levelname)s] %(asctime)s [%(name)s:%(lineno)s] %(module)s.%(funcName)s(): %(message)s",  # noqa
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+        "simple": {
+            "format": "[%(levelname)s] %(asctime)s %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
     "handlers": {
-        "backend_log_file": {
-            "level": "ERROR",
+        "console": {
+            "level": LOG_LEVEL,
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {
+            "level": LOG_LEVEL,
             "filters": [],
-            "class": "logging.handlers.TimedRotatingFileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "logs/backend.log"),
-            "when": "M",
-            "interval": 1,
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
             "backupCount": BACKUP_COUNT,
             "formatter": "verbose",
         },
-        "sql_log_file": {
+        "sql": {
             "level": "DEBUG",
             "filters": [],
             "class": "logging.handlers.TimedRotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "logs/sql.log"),
-            "when": "M",
-            "interval": 1,
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
             "backupCount": BACKUP_COUNT,
-            "formatter": "verbose",
+            "formatter": "simple",
         },
     },
     "loggers": {
         "django.request": {
-            "handlers": ["backend_log_file"],
-            "level": "ERROR",
+            "handlers": ["console", "file"],
+            "level": LOG_LEVEL,
             "propagate": True,
         },
         "django.db.backends": {
-            "handlers": ["sql_log_file"],
+            "handlers": ["sql"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         "app": {
-            "handlers": ["backend_log_file"],
+            "handlers": ["console", "file"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
         "apps": {
-            "handlers": ["backend_log_file"],
+            "handlers": ["console", "file"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        "tests": {
+            "handlers": ["console", "file"],
             "level": LOG_LEVEL,
             "propagate": False,
         },
@@ -297,7 +324,6 @@ REST_FRAMEWORK = {
     # Exception handling
     "EXCEPTION_HANDLER": "app.django.exception.exception_handler",
 }
-
 
 # SMTP Gmail
 EMAIL_USE_LOCALTIME = True

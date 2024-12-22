@@ -1,6 +1,5 @@
 from .common import *  # NOQA NOSONAR
 
-
 # Application definition
 DJANGO_APPS += [
     "django.contrib.admin",
