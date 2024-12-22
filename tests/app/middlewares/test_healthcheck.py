@@ -2,9 +2,10 @@ import json
 from unittest import TestCase
 from unittest.mock import Mock
 
-from constance import config as constance_config
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.test import override_settings
+
+from constance import config as constance_config
 from rest_framework.status import HTTP_200_OK, HTTP_503_SERVICE_UNAVAILABLE
 
 from app.config import config
@@ -85,8 +86,8 @@ class TestMaintenanceMiddleware(TestCase):
 
     @override_settings(LANGUAGES=[("en", "English"), ("vi", "Vietnamese")])
     def test_get_allowed_paths(self) -> None:
-        """Test that _get_allowed_paths returns the correct list of allowed paths."""
-        paths = self.middleware._get_allowed_paths()
+        """Test that get_allowed_paths returns the correct list of allowed paths."""
+        paths = self.middleware.get_allowed_paths()
         expected_paths = ["/admin", "/en/admin", "/vi/admin"]
         self.assertEqual(set(paths), set(expected_paths))
 

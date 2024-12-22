@@ -1,30 +1,31 @@
-from typing import Any, Optional
+from typing import Optional
 
 from django.core.cache import cache
 from django.http import HttpRequest
+
 from rest_framework.throttling import SimpleRateThrottle
 
 
 class CustomIPRateThrottle(SimpleRateThrottle):
-    """
-    Rate limiting based on IP address with burst control.
+    """Rate limiting based on IP address with burst control.
 
     Attributes:
         rate: Default rate limit
         burst_rate: Higher rate allowed for short periods
         burst_duration: Duration in seconds for burst allowance
+
     """
 
     rate = "100/hour"  # Default rate
     burst_rate = "200/hour"  # Burst allowance
     burst_duration = 300  # 5 minutes
 
-    def get_cache_key(self, request: HttpRequest, view: Optional[Any]) -> str:
+    def get_cache_key(self, request: HttpRequest, _: Optional[object]) -> str:
         """Generate unique cache key for request."""
         ident = self.get_ident(request)
         return f"throttle_ip_{ident}"
 
-    def allow_request(self, request: HttpRequest, view: Optional[Any]) -> bool:
+    def allow_request(self, request: HttpRequest, view: Optional[object]) -> bool:
         """Check if request should be allowed with burst consideration."""
         if self.rate is None:
             return True

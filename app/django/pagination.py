@@ -12,6 +12,7 @@ class CustomPagination(PageNumberPagination):
     Attributes:
         max_page_size (int): Maximum number of items per page
         page_size_query_param (str): Query parameter name for page size
+
     """
 
     max_page_size = Pagination.MAX_PAGE_SIZE

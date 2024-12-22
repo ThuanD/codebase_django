@@ -1,8 +1,0 @@
-django
-django-cors-headers
-django-constance
-django-filter
-djangorestframework
-drf-nested-routers
-gunicorn
-python-dotenv

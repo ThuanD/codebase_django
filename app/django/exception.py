@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional
 
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, JsonResponse
+
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework.status import (
@@ -20,9 +21,7 @@ logger = logging.getLogger(__name__)
 class APIExceptionHandler:
     """Exception handler for API exceptions."""
 
-    def handle_exception(
-        self, exc: Exception, context: Dict[str, Any]
-    ) -> Optional[Response]:
+    def handle_exception(self, exc: Exception, _: Dict[str, Any]) -> Optional[Response]:
         """Handle main exception."""
         exc = self._normalize_exception(exc)
 
@@ -68,15 +67,17 @@ class APIExceptionHandler:
     def _log_api_error(self, exc: exceptions.APIException, data: Dict) -> None:
         """Log details about API exceptions."""
         logger.info(
-            f"API LOGGING: API exception: [{exc.__class__.__name__}: {data}]",
-            exc_info=True)
+            "API LOGGING: API exception: [%s: %s]",
+            exc.__class__.__name__,
+            data,
+            exc_info=True,
+        )
 
     def _log_unexpected_error(self, exc: Exception) -> None:
         """Log unexpected exceptions."""
         logger.exception(
-            "API LOGGING: Unexpected exception occurred: [%s]",
-            exc,
-            exc_info=True)
+            "API LOGGING: Unexpected exception occurred: [{%s}]", exc, exc_info=True
+        )
 
 
 # Global exception handler function

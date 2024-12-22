@@ -47,9 +47,7 @@ class RequestLoggingMiddleware:
                 logger.warning("API LOGGING: Failed to decode request body.")
                 return None
             except Exception as error:
-                logger.warning(
-                    "API LOGGING: Failed to process request body: %s",
-                    error)
+                logger.warning("API LOGGING: Failed to process request body: %s", error)
                 return None
 
         if len(str(body)) > RequestBodyLogger.MAX_BODY_SIZE:

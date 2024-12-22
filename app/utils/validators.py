@@ -6,8 +6,7 @@ from django.utils.translation import gettext as _
 
 
 class InputValidator:
-    """
-    Utility class for validating user input.
+    """Utility class for validating user input.
 
     Provides methods for common validation scenarios with
     configurable rules and sanitization.
@@ -31,8 +30,7 @@ class InputValidator:
         max_length: int = 255,
         pattern: Optional[str] = None,
     ) -> str:
-        """
-        Validate and sanitize string input.
+        """Validate and sanitize string input.
 
         Args:
             value: Input string to validate
@@ -45,6 +43,7 @@ class InputValidator:
 
         Raises:
             ValidationError: If validation fails
+
         """
         if not isinstance(value, str):
             raise ValidationError(_("Value must be a string"))

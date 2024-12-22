@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.test import RequestFactory
+
 from rest_framework.status import HTTP_200_OK
 
 from app.contrib.request_logging.middleware import RequestLoggingMiddleware
@@ -25,8 +26,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
         """Tear down the test environment."""
         cache.clear()
 
-    @patch("app.contrib.request_logging.middleware.logger")
-    def test_middleware_call(self, mock_logger: Mock) -> None:
+    def test_middleware_call(self) -> None:
         """Test the middleware call."""
         request = self.factory.post("/test/", {"param": "value"})
         request.id = "123456"
@@ -61,9 +61,9 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
         RequestLoggingMiddleware.log_request(request, END_REQUEST)
 
         expected_log = (
-            '[request_id=123456, method=POST, content_type=application/json, '
-            f'path=/test/, query=, body={json.dumps(data)}, user_agent=None, '
-            f'ip=127.0.0.1], '
+            "[request_id=123456, method=POST, content_type=application/json, "
+            f"path=/test/, query=, body={json.dumps(data)}, user_agent=None, "
+            f"ip=127.0.0.1], "
             f"End of request."
         )
         mock_logger.info.assert_called_once_with(expected_log)

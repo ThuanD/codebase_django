@@ -1,4 +1,4 @@
-# Contributing Guide
+# `CONTRIBUTING.md`
 
 ## Development Setup
 
