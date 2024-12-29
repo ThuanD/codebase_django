@@ -1,4 +1,5 @@
 from django.urls import path
+
 from drf_spectacular.views import (
     SpectacularJSONAPIView,
     SpectacularRedocView,

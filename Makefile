@@ -1,43 +1,37 @@
 .PHONY: init update-deps secret_key static migrate cache test run gunicorn shell run-hooks
 init:
-	poetry install --no-root --all-extras
+	uv pip install -r pyproject.toml
 
-update-deps:
-	poetry update
-
-secret_key:
-	poetry run python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+key:
+	uv run python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 
 static:
-	poetry run python manage.py collectstatic --no-input
+	uv run python manage.py collectstatic --no-input
 
 migrate:
-	poetry run python manage.py migrate
+	uv run python manage.py migrate
 
 cache:
-	poetry run python manage.py createcachetable
+	uv run python manage.py createcachetable
 
 test:
-	poetry run coverage run --source='.' manage.py test --settings=app.settings.local_test
-	poetry run coverage html
+	uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
+	uv run coverage html
 
 run:
-	poetry run python manage.py runserver
+	uv run python manage.py runserver
 
 gunicorn:
-	poetry run gunicorn app.wsgi:application -b 0.0.0.0:8000 --timeout 300 --reload
+	uv run gunicorn app.wsgi:application -b 0.0.0.0:8000 --timeout 300 --reload
 
 shell:
-	poetry run python manage.py shell_plus
+	uv run python manage.py shell_plus
 
-isort:
-	poetry run isort .
+lint:
+	uvx ruff check
 
-black:
-	poetry run black .
-
-flake8:
-	poetry run flake8
+lint-fix:
+	uvx ruff check --fix
 
 hooks:
-	poetry run pre-commit run --all-files
+	uv run pre-commit run --all-files

@@ -2,18 +2,18 @@ import os
 import unittest
 from unittest.mock import MagicMock, patch
 
-from manage import _get_django_setting_module
+from manage import get_django_setting_module
 
 
 class TestGetDjangoSettingModule(unittest.TestCase):
     """Test suite for Django settings module resolution functionality.
 
-    This test suite verifies the behavior of _get_django_setting_module function
+    This test suite verifies the behavior of get_django_setting_module function
     under different scenarios including command line arguments and environment
     variables.
     """
 
-    @patch("manage._get_django_setting_module")
+    @patch("manage.get_django_setting_module")
     @patch.dict("os.environ", {}, clear=True)
     def test_django_import_error(self, mock_get_settings: MagicMock) -> None:
         """Test Django import error handling.
@@ -22,10 +22,11 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         or not available in PYTHONPATH.
 
         Args:
-            mock_get_settings: Mock object for _get_django_setting_module function.
+            mock_get_settings: Mock object for get_django_setting_module function.
 
         Returns:
             None
+
         """
         mock_get_settings.return_value = "app.settings.local"
 
@@ -54,6 +55,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
 
         Returns:
             None
+
         """
         # Setup mock arguments
         mock_args = MagicMock()
@@ -61,7 +63,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         mock_parse_known_args.return_value = (mock_args, None)
 
         # Execute function under test
-        result = _get_django_setting_module()
+        result = get_django_setting_module()
 
         # Verify result
         self.assertEqual(result, "app.settings.production")
@@ -78,6 +80,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
 
         Returns:
             None
+
         """
         # Setup environment and mock arguments
         os.environ["DJANGO_SETTINGS_MODULE"] = "app.settings.staging"
@@ -86,7 +89,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         mock_parse_known_args.return_value = (mock_args, None)
 
         # Execute function under test
-        result = _get_django_setting_module()
+        result = get_django_setting_module()
 
         # Verify result
         self.assertEqual(result, "app.settings.staging")
@@ -104,6 +107,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
 
         Returns:
             None
+
         """
         # Setup mock arguments
         mock_args = MagicMock()
@@ -111,7 +115,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         mock_parse_known_args.return_value = (mock_args, [])
 
         # Execute function under test
-        result = _get_django_setting_module(".env.mock")
+        result = get_django_setting_module(".env.mock")
 
         # Verify result
         self.assertEqual(result, "app.settings.local")

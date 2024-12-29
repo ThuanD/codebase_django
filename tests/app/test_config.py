@@ -1,9 +1,10 @@
 from unittest import TestCase
 from unittest.mock import patch
 
-from constance import config as constance_config
 from django.conf import settings
 from django.test import override_settings
+
+from constance import config as constance_config
 
 from app.config import config
 

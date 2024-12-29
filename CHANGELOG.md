@@ -37,3 +37,18 @@
 
 ### Delete
 - setup.cfg
+
+
+## [0.1.2] - 2024-12-23
+
+### Added
+- uv
+- ruff
+
+### Update
+- pyproject.toml
+- Fix sql logging
+
+### Delete
+- poetry
+- flake8

@@ -5,18 +5,18 @@ bash
 
 ## Run all tests
 ```bash
-make test
+uv run python manage.py test
 ```
 
 ## Run specific test file
 ```bash
-poetry run python manage.py test tests.app.django.test_pagination
+uv run python manage.py test tests.app.django.test_exception --settings=app.settings.local_test
 ```
 
 ## Run with coverage
 ```bash
-poetry run coverage run manage.py test
-poetry run coverage report
+uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
+uv run coverage html
 ```
 
 

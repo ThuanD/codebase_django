@@ -1,48 +1,22 @@
-fail_fast: false
-
 repos:
+  # Note: hooks that add content must run before ones which check formatting, lint, etc
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
       - id: check-yaml
-      - id: check-added-large-files
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
     hooks:
-      - id: isort
+      # Run the linter
+      - id: ruff
+        args: [ --fix, --exit-non-zero-on-fix ]
+      # Run the formatter
+      - id: ruff-format
 
-  - repo: https://github.com/psf/black
-    rev: 24.3.0
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: v2.5.0
     hooks:
-      - id: black
-
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.8
-    hooks:
-      - id: bandit
-        args: ["-c", "pyproject.toml"]
-
-  - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
-    hooks:
-      - id: flake8
-        args: [
-          "--max-line-length=88",
-          "--extend-ignore=ANN101,ANN102,D100,D104",
-          "--exclude=.git,__pycache__,build,dist,venv,.venv",
-          "--per-file-ignores=__init__.py:F401,*/settings/*:F405,*/migrations/*:E501"
-        ]
-        additional_dependencies:
-          - flake8-builtins
-          - flake8-todo
-          - flake8-debugger
-          - flake8-bandit
-          - flake8-bugbear
-          - flake8-comprehensions
-          - flake8-docstrings
-          - flake8-string-format
-          - flake8-broken-line
-          - flake8-annotations
+      - id: pyproject-fmt

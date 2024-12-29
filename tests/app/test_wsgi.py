@@ -14,7 +14,7 @@ class TestWSGI(unittest.TestCase):
         mock_args.env = "app.settings.production"
         mock_argparse.return_value.parse_known_args.return_value = (mock_args, None)
 
-        result = wsgi._get_django_setting_module()
+        result = wsgi.get_django_setting_module()
         self.assertEqual(result, "app.settings.production")
 
     @patch("app.wsgi.load_dotenv")
@@ -32,7 +32,7 @@ class TestWSGI(unittest.TestCase):
         mock_argparse.return_value.parse_known_args.return_value = (mock_args, None)
         mock_load_dotenv.return_value = True
         mock_getenv.return_value = "app.settings.staging"
-        result = wsgi._get_django_setting_module()
+        result = wsgi.get_django_setting_module()
         self.assertEqual(result, "app.settings.staging")
 
     @patch("app.wsgi.load_dotenv")
@@ -46,5 +46,5 @@ class TestWSGI(unittest.TestCase):
         mock_argparse.return_value.parse_known_args.return_value = (mock_args, None)
         mock_load_dotenv.return_value = False
 
-        result = wsgi._get_django_setting_module()
+        result = wsgi.get_django_setting_module()
         self.assertEqual(result, "app.settings.local")

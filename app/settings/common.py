@@ -9,24 +9,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import logging
 import os
 import sys
+from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
+
 from dotenv import load_dotenv
 
 from app.constants import TRUE_VALUES
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # get env
 django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
 env = django_settings_module.split(".")[-1]
 # load .env file
-if not load_dotenv(os.path.join(BASE_DIR, ".env." + env)):
-    if not load_dotenv(os.path.join(BASE_DIR, ".env")):
-        print("\033[91mERROR: Unable to find .env file.")
+if not load_dotenv(BASE_DIR / f".env.{env}"):
+    if not load_dotenv(BASE_DIR / ".env"):
+        logging.error("\033[91mERROR: Unable to find .env file.")
         sys.exit(1)
     django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
 
@@ -47,28 +50,20 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") in TRUE_VALUES
 
-ALLOWED_HOSTS = [
-    host.strip() for host in os.getenv("ALLOWED_HOSTS", "").split(",") if host.strip()
-]
+
+def parse_comma_separated_list(value: str) -> list:
+    """Parse a comma-separated list of strings into a list of strings."""
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+ALLOWED_HOSTS = parse_comma_separated_list(os.getenv("ALLOWED_HOSTS", ""))
 
 # SECURITY WARNING: don't allow all origins in production!
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-cors_allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS")
-if cors_allowed_origins:
-    CORS_ALLOWED_ORIGINS = [
-        origin.strip() for origin in cors_allowed_origins.split(",") if origin.strip()
-    ]
-else:
-    CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS = parse_comma_separated_list(os.getenv("CORS_ALLOWED_ORIGINS", ""))
 
-csrf_trusted_origins = os.getenv("CSRF_TRUSTED_ORIGINS")
-if csrf_trusted_origins:
-    CSRF_TRUSTED_ORIGINS = [
-        origin.strip() for origin in csrf_trusted_origins.split(",") if origin.strip()
-    ]
-else:
-    CSRF_TRUSTED_ORIGINS = []
+CSRF_TRUSTED_ORIGINS = parse_comma_separated_list(os.getenv("CSRF_TRUSTED_ORIGINS", ""))
 
 # Application definition
 DJANGO_APPS = [
@@ -136,7 +131,7 @@ WSGI_APPLICATION = "app.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -180,7 +175,7 @@ USE_I18N = True
 USE_TZ = True
 
 # locale
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+LOCALE_PATHS = (BASE_DIR / "locale",)
 LANGUAGE_DEFAULT = "en"
 LANGUAGES = [
     ("en", _("English")),
@@ -191,12 +186,12 @@ LANGUAGES = [
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = []
 
 # Media file
 MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -212,7 +207,8 @@ SHELL_PLUS_IMPORTS = [
     "from app.config import config",
 ]
 # logging
-os.makedirs(os.path.join(BASE_DIR, "logs"), exist_ok=True)
+log_path = Path(BASE_DIR) / "logs"
+log_path.mkdir(parents=True, exist_ok=True)
 if IS_PRODUCTION:
     LOG_LEVEL = "INFO"
     BACKUP_COUNT = 100
@@ -227,7 +223,8 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "[%(levelname)s] %(asctime)s [%(name)s:%(lineno)s] %(module)s.%(funcName)s(): %(message)s",  # noqa
+            "format": "[%(levelname)s] %(asctime)s [%(name)s:%(lineno)s] "
+            "%(module)s.%(funcName)s(): %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
         "simple": {
@@ -245,7 +242,7 @@ LOGGING = {
             "level": LOG_LEVEL,
             "filters": [],
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BASE_DIR, "logs/backend.log"),
+            "filename": BASE_DIR / "logs/backend.log",
             "maxBytes": 1024 * 1024 * 5,  # 5 MB
             "backupCount": BACKUP_COUNT,
             "formatter": "verbose",
@@ -253,8 +250,8 @@ LOGGING = {
         "sql": {
             "level": "DEBUG",
             "filters": [],
-            "class": "logging.handlers.TimedRotatingFileHandler",
-            "filename": os.path.join(BASE_DIR, "logs/sql.log"),
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs/sql.log",
             "maxBytes": 1024 * 1024 * 5,  # 5 MB
             "backupCount": BACKUP_COUNT,
             "formatter": "simple",
@@ -312,8 +309,8 @@ REST_FRAMEWORK = {
     ],
     # Throttling
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "1000/day",
-        "user": "10000/day",
+        "anon": "30/minute",
+        "user": "120/minute",
     },
     # Pagination
     "PAGE_SIZE": 20,

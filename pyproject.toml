@@ -1,125 +1,123 @@
-[tool.poetry]
+[project]
 name = "app"
 version = "0.1.0"
-description = "Base app for Django"
-authors = ["kai <thuan.dv0@gmail.com>"]
-repository = "https://github.com/ThuanD/base_django"
+description = "Add your description here"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-django = "^5.0.7"
-django-cors-headers = "^4.4.0"
-django-constance = "^3.1.0"
-django-filter = "^24.2"
-gunicorn = "^23.0.0"
-python-dotenv = "^1.0.1"
-pydantic = {extras = ["email"], version = "^2.10.4"}
-flake8 = "^7.1.1"
-
-
-[tool.poetry.group.dev.dependencies]
-coverage = "^7.6.0"
-django-dbbackup = "^4.1.0"
-django-debug-toolbar = "^4.4.6"
-django-extensions = "^3.2.3"
-drf-spectacular = "^0.27.2"
-flake8 = "^7.1.0"
-flake8-pyproject = "^1.2.3"
-flake8-builtins = "^2.5.0"
-flake8-todo = "^0.7"
-flake8-isort = "^6.1.1"
-flake8-debugger = "^4.1.2"
-flake8-bandit = "^4.1.1"
-flake8-bugbear = "^24.12.12"
-flake8-comprehensions = "^3.16.0"
-flake8-docstrings = "^1.7.0"
-flake8-string-format = "^0.3.0"
-flake8-broken-line = "^1.0.0"
-flake8-annotations = "^3.1.1"
-isort = "^5.13.2"
-ipython = "^8.26.0"
-pre-commit = "^3.8.0"
-black = "^24.10.0"
-
-[tool.poetry.group.test.dependencies]
-coverage = "^7.6.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-profile = "black"
-extend_skip = [".md", ".json"]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-line_length = 88
-
-[tool.black]
-line-length = 88
-target-version = ["py38", "py39", "py310", "py311", "py312"]
-
-[tool.bandit.assert_used]
-skips = ["test_*.py"]
-
-[tool.flake8]
-application_import_names = "app"
-max-line-length = 88
-max-complexity = 10
-exclude = [".git", "__pycache__", "build", "dist", "venv", ".venv"]
-extend-ignore = ["ANN101", "ANN102", "D100", "D104"]
-per-file-ignores = [
-    "__init__.py: F401",
-    "*/settings/*: F405",
-    "*/migrations/*: E501",
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+  "django>=5.1.4",
+  "django-constance>=4.1.3",
+  "django-cors-headers>=4.6",
+  "django-extensions>=3.2.3",
+  "django-filter>=24.3",
+  "djangorestframework>=3.15.2",
+  "drf-spectacular>=0.28",
+  "gunicorn>=23",
+  "pydantic>=2.10.4",
+  "python-dotenv>=1.0.1",
 ]
 
-[tool.flake8.plugins]
-# Core Flake8 plugins
-builtins = true
-logging-format = true
-todo = true
-debugger = true
+[dependency-groups]
+dev = [
+  "coverage>=7.6.9",
+  "django-debug-toolbar>=4.4.6",
+  "pre-commit>=4.0.1",
+  "ruff>=0.8.4",
+]
 
-# Additional Flake8 plugins
-banditbandit = true
-bugbear = true
-comprehensions = true
-docstrings = true
-string-format = true
-broken-line = true
-annotations = true
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+indent-width = 4
+extend-exclude = [
+  "build",
+  "dist",
+  "docs",
+]
+
+format.indent-style = "space"
+format.quote-style = "double"
+format.line-ending = "auto"
+format.skip-magic-trailing-comma = false
+format.docstring-code-line-length = "dynamic"
+format.docstring-code-format = false
+# Set what ruff should check for.
+# See https://docs.astral.sh//ruff/rules/ for a list of rules.
+lint.select = [
+  "A",   # flake8-builtin errors
+  "ANN", # flake8-annotations errors
+  "ARG", # flake8-unused-arguments
+  "B",   # flake8-bugbear errors
+  "C4",  # flake8-comprehensions errors
+  "D",   # pydocstyle errors
+  "DJ",  # flake8-django errors
+  "E",   # pycodestyle errors
+  "F",   # pyflakes errors
+  "G",   # flake8-logging-format
+  "I",   # import sorting
+  "INT", # flake8-gettext
+  "LOG", # flake8-logging
+  "N",   # pep8-naming
+  "PTH", # flake8-use-pathlib
+  "Q",   # flake8-quotes errors
+  "RET", # flake8-return
+  "RSE", # flake8-raise
+  "S",   # flake8-bandit errors
+  "SLF", # flake8-self
+  "T10", # flake8-debugger
+  "T20", # flake8-print errors
+  "TC",  # flake8-type-checking
+  "TD",  # flake8-todos
+  "UP",  # py-upgrade
+  "W",   # pycodestyle warnings
+]
+lint.ignore = [ "D100", "D104", "D203", "D213" ]
+lint.per-file-ignores."*/settings/*" = [ "F405" ]
+# Allow unused variables when underscore-prefixed.
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+lint.isort.known-local-folder = [ "app" ]
+lint.isort.section-order = [
+  "future",
+  "standard-library",
+  "django",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+# Group all Django imports into a separate section.
+lint.isort.sections."django" = [ "django" ]
 
 [tool.coverage.run]
-source = ["."]
+source = [ "." ]
 branch = true
-omit = ["*/migrations/*"]
+omit = [ "*/migrations/*" ]
 
 [tool.coverage.report]
 ignore_errors = true
 exclude_lines = [
-    # Don't complain about missing debug-only code:
-    "def __repr__",
-    "if self\\.debug",
+  # Don't complain about missing debug-only code:
+  "def __repr__",
+  "if self\\.debug",
 
-    # Don't complain if tests don't hit defensive assertion code:
-    "raise AssertionError",
-    "raise NotImplementedError",
+  # Don't complain if tests don't hit defensive assertion code:
+  "raise AssertionError",
+  "raise NotImplementedError",
 
-    # Don't complain if non-runnable code isn't run:
-    "if 0:",
-    "if __name__ == .__main__.:",
+  # Don't complain if non-runnable code isn't run:
+  "if 0:",
+  "if __name__ == .__main__.:",
 
-    # Don't complain about abstract methods, they aren't run:
-    "@(abc\\.)?abstractmethod",
+  # Don't complain about abstract methods, they aren't run:
+  "@(abc\\.)?abstractmethod",
 
-    # Other
-    "pragma: no cover",
-    "pass",
+  # Other
+  "pragma: no cover",
+  "pass",
 ]
 
 [tool.coverage.html]

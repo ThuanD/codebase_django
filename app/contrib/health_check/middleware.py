@@ -33,10 +33,10 @@ class MaintenanceMiddleware:
     def __init__(self, get_response: Callable) -> None:
         """Initialize the middleware with the get_response function."""
         self.get_response = get_response
-        self.allowed_paths: List[str] = self._get_allowed_paths()
+        self.allowed_paths: List[str] = self.get_allowed_paths()
 
     @staticmethod
-    def _get_allowed_paths() -> List[str]:
+    def get_allowed_paths() -> List[str]:
         """Get the allowed paths for maintenance mode."""
         allowed_paths = ["/admin"]
         allowed_paths += [f"/{lang[0]}/admin" for lang in settings.LANGUAGES]

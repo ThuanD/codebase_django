@@ -82,8 +82,6 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX": "/api/",
 }
 
-# LOGGING = {}
-
 # django-constance
 CONSTANCE_BACKEND = "constance.backends.memory.MemoryBackend"
 
