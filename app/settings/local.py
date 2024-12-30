@@ -74,13 +74,15 @@ SHELL_PLUS_PRINT_SQL = True
 
 # django-spectacular
 SPECTACULAR_SETTINGS = {
-    "TITLE": "APP API Documentation",
+    "TITLE": "[APP][LOOCAL] API Documentation",
     "DESCRIPTION": "",
     "VERSION": "1.0.0",
     "SERVE_PUBLIC": False,
     "SERVE_INCLUDE_SCHEMA": False,
     "SCHEMA_PATH_PREFIX": "/api/",
 }
+
+LOGGING = get_logging_config("DEBUG", 10)
 
 # django-constance
 CONSTANCE_BACKEND = "constance.backends.memory.MemoryBackend"

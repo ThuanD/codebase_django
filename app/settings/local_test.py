@@ -26,7 +26,7 @@ CACHES = {
     }
 }
 
-LOGGING = {}
+LOGGING = get_logging_config("DEBUG", 3)
 
 # django-constance
 CONSTANCE_BACKEND = "constance.backends.memory.MemoryBackend"

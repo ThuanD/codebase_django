@@ -24,6 +24,9 @@ coverage:
 api-docs:
 	uv run python manage.py spectacular --file schema.yml
 
+admin:
+	DJANGO_SUPERUSER_PASSWORD=admin uv run python manage.py createsuperuser --username admin --email admin@example.com --noinput
+
 run:
 	uv run python manage.py runserver
 

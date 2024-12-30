@@ -5,6 +5,7 @@ from typing import Callable, Optional
 
 from django.http import HttpRequest, HttpResponse
 
+from app.constants import LoggerConstant
 from app.contrib.request_logging.logger import RequestBodyLogger
 from app.message.middlewares import END_REQUEST, START_REQUEST
 
@@ -50,7 +51,7 @@ class RequestLoggingMiddleware:
                 logger.warning("API LOGGING: Failed to process request body: %s", error)
                 return None
 
-        if len(str(body)) > RequestBodyLogger.MAX_BODY_SIZE:
+        if len(str(body)) > LoggerConstant.MAX_BODY_SIZE:
             return "BODY TOO LARGE"
         return json.dumps(RequestBodyLogger.sanitize_body(body))
 

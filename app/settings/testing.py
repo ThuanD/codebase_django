@@ -16,7 +16,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 # django-spectacular
 SPECTACULAR_SETTINGS = {
-    "TITLE": "APP API Documentation",
+    "TITLE": "[APP][TESTING] API Documentation",
     "DESCRIPTION": "",
     "VERSION": "1.0.0",
     "SERVE_PUBLIC": False,
@@ -26,3 +26,5 @@ SPECTACULAR_SETTINGS = {
 
 # Schema
 REST_FRAMEWORK["DEFAULT_SCHEMA_CLASS"] = "drf_spectacular.openapi.AutoSchema"
+
+LOGGING = get_logging_config("DEBUG", 30)

@@ -19,6 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 from app.constants import TRUE_VALUES
+from app.settings import get_logging_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -206,85 +207,8 @@ SHELL_PLUS_PRINT_SQL = False
 SHELL_PLUS_IMPORTS = [
     "from app.config import config",
 ]
-# logging
-log_path = Path(BASE_DIR) / "logs"
-log_path.mkdir(parents=True, exist_ok=True)
-if IS_PRODUCTION:
-    LOG_LEVEL = "INFO"
-    BACKUP_COUNT = 100
-elif IS_STAGING:
-    LOG_LEVEL = "DEBUG"
-    BACKUP_COUNT = 30
-else:
-    LOG_LEVEL = "DEBUG"
-    BACKUP_COUNT = 10
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "[%(levelname)s] %(asctime)s [%(name)s:%(lineno)s] "
-            "%(module)s.%(funcName)s(): %(message)s",
-            "datefmt": "%Y-%m-%d %H:%M:%S",
-        },
-        "simple": {
-            "format": "[%(levelname)s] %(asctime)s %(message)s",
-            "datefmt": "%Y-%m-%d %H:%M:%S",
-        },
-    },
-    "handlers": {
-        "console": {
-            "level": LOG_LEVEL,
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-        "file": {
-            "level": LOG_LEVEL,
-            "filters": [],
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BASE_DIR / "logs/backend.log",
-            "maxBytes": 1024 * 1024 * 5,  # 5 MB
-            "backupCount": BACKUP_COUNT,
-            "formatter": "verbose",
-        },
-        "sql": {
-            "level": "DEBUG",
-            "filters": [],
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BASE_DIR / "logs/sql.log",
-            "maxBytes": 1024 * 1024 * 5,  # 5 MB
-            "backupCount": BACKUP_COUNT,
-            "formatter": "simple",
-        },
-    },
-    "loggers": {
-        "django.request": {
-            "handlers": ["console", "file"],
-            "level": LOG_LEVEL,
-            "propagate": True,
-        },
-        "django.db.backends": {
-            "handlers": ["sql"],
-            "level": LOG_LEVEL,
-            "propagate": False,
-        },
-        "app": {
-            "handlers": ["console", "file"],
-            "level": LOG_LEVEL,
-            "propagate": False,
-        },
-        "apps": {
-            "handlers": ["console", "file"],
-            "level": LOG_LEVEL,
-            "propagate": False,
-        },
-        "tests": {
-            "handlers": ["console", "file"],
-            "level": LOG_LEVEL,
-            "propagate": False,
-        },
-    },
-}
+
+LOGGING = get_logging_config("INFO", 100)
 
 REST_FRAMEWORK = {
     # Base API policies
