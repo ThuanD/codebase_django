@@ -1,25 +1,26 @@
-## Base Project - Django
+# Django Base Project
 
-Python version 3.12.3
+A production-ready Django project template with:
 
-uv 0.5.6
+- Django REST Framework
+- OpenAPI documentation (drf-spectacular)
+- Environment configuration
+- Testing setup
+- Docker support
+- Code quality tools (ruff, pre-commit)
 
 ### Setup
 
-1. Clone the repository:
+1. Clone this repository:
     ```bash
     git clone https://github.com/ThuanD/base_django.git
     cd base_django
     ```
 2. Create virtual environment:
     ```bash
-    uv venv --python 3.12.3
+    python -m venv venv
     ```
-3. Install dependencies:
-    ```bash
-    uv pip install -r pyproject.toml
-    ```
-4. Set up environment variables:
+3. Copy `.env.example` to `.env` and configure:
     ```bash
     cp .env.example .env
     ```
@@ -27,21 +28,17 @@ uv 0.5.6
    ```bash
     uv run python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
     ```
-5. Collect static files:
+4. Install dependencies:
     ```bash
-    uv run python manage.py collectstatic --no-input
+    pip install -r requirements.txt
     ```
-6. Apply migrations:
+5. Run migrations:
     ```bash
-    uv run python manage.py migrate
+    python manage.py migrate
     ```
-7. Create cache table:
+6. Start server:
     ```bash
-    uv run python manage.py createcachetable
-    ```
-8. Run the development server:
-    ```bash
-    uv run python manage.py runserver
+    python manage.py runserver
     ```
 
 ### Running Tests
