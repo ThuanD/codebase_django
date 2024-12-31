@@ -1,8 +1,6 @@
 # Endpoint to health check API service
 HEALTH_CHECK_API = "/api/health_check/"
 
-TRUE_VALUES = ["1", "t", "true", "True", "TRUE", "y", "yes", "Yes", "YES"]
-
 
 class LoggerConstant:
     """Class for logger constants."""

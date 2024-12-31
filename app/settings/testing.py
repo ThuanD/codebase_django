@@ -27,4 +27,6 @@ SPECTACULAR_SETTINGS = {
 # Schema
 REST_FRAMEWORK["DEFAULT_SCHEMA_CLASS"] = "drf_spectacular.openapi.AutoSchema"
 
+EMAIL_SUBJECT_PREFIX = "[APP][TESTING]"
+
 LOGGING = get_logging_config("DEBUG", 30)

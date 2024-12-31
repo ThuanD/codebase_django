@@ -18,8 +18,7 @@ from django.utils.translation import gettext_lazy as _
 
 from dotenv import load_dotenv
 
-from app.constants import TRUE_VALUES
-from app.settings import get_logging_config
+from app.settings import EnvSettings, get_logging_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -28,8 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
 env = django_settings_module.split(".")[-1]
 # load .env file
-if not load_dotenv(BASE_DIR / f".env.{env}"):
-    if not load_dotenv(BASE_DIR / ".env"):
+env_file = BASE_DIR / f".env.{env}"
+if not load_dotenv(env_file):
+    env_file = BASE_DIR / ".env"
+    if not load_dotenv(env_file):
         logging.error("\033[91mERROR: Unable to find .env file.")
         sys.exit(1)
     django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
@@ -43,13 +44,15 @@ IS_PRODUCTION = django_settings_module == "app.settings.production"
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # Load and validate security configuration
-# security_config = EnvConfigManager(SecurityConfig).get_config()
+env_settings = EnvSettings(
+    _case_sensitive=False, _env_file=env_file, _env_file_encoding="utf-8"
+)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = env_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") in TRUE_VALUES
+DEBUG = env_settings.DEBUG
 
 
 def parse_comma_separated_list(value: str) -> list:
@@ -57,14 +60,14 @@ def parse_comma_separated_list(value: str) -> list:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-ALLOWED_HOSTS = parse_comma_separated_list(os.getenv("ALLOWED_HOSTS", ""))
+ALLOWED_HOSTS = env_settings.ALLOWED_HOSTS
 
 # SECURITY WARNING: don't allow all origins in production!
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-CORS_ALLOWED_ORIGINS = parse_comma_separated_list(os.getenv("CORS_ALLOWED_ORIGINS", ""))
+CORS_ALLOWED_ORIGINS = env_settings.CORS_ALLOWED_ORIGINS
 
-CSRF_TRUSTED_ORIGINS = parse_comma_separated_list(os.getenv("CSRF_TRUSTED_ORIGINS", ""))
+CSRF_TRUSTED_ORIGINS = env_settings.CSRF_TRUSTED_ORIGINS
 
 # Application definition
 DJANGO_APPS = [
@@ -252,10 +255,10 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_TIMEOUT = 5  # seconds
 EMAIL_PORT = 587
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+EMAIL_HOST = env_settings.EMAIL_HOST
+EMAIL_HOST_USER = env_settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = env_settings.EMAIL_HOST_PASSWORD
+DEFAULT_FROM_EMAIL = env_settings.DEFAULT_FROM_EMAIL
 EMAIL_SUBJECT_PREFIX = "[APP]"
 
 MAINTENANCE_ENABLE = False

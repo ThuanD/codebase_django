@@ -1,12 +1,14 @@
 from pathlib import Path
+from typing import List, Optional
+
+from pydantic import AnyHttpUrl, EmailStr, Field
+from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 def get_logging_config(
-    log_level: str = "INFO",
-    backup_count: int = 10,
-    max_bytes: int = 5242880,  # 5MB
+    log_level: str = "INFO", backup_count: int = 10, max_bytes: int = 5242880
 ) -> dict:
     """Get logging configuration based on log level."""
     log_path = Path(BASE_DIR) / "logs"
@@ -81,3 +83,26 @@ def get_logging_config(
             "level": "WARNING",
         },
     }
+
+
+class EnvSettings(BaseSettings):
+    """Env settings."""
+
+    # Django settings
+    DJANGO_SETTINGS_MODULE: str = Field(..., description="Django settings module")
+    DEBUG: bool = Field(False, description="Enable debug mode")
+    SECRET_KEY: str = Field(..., description="Secret key for Django")
+
+    # Host settings
+    ALLOWED_HOSTS: List[str] = Field(description="List of allowed hosts")
+    CORS_ALLOWED_ORIGINS: List[AnyHttpUrl] = Field(description="CORS allowed origins")
+    CSRF_TRUSTED_ORIGINS: List[AnyHttpUrl] = Field(description="CSRF trusted origins")
+
+    # Email settings
+    EMAIL_HOST: str = Field("smtp.gmail.com", description="Email host")
+    EMAIL_PORT: int = Field(587, description="Email port")
+    EMAIL_USE_TLS: bool = Field(True, description="Use TLS for email")
+    EMAIL_USE_SSL: bool = Field(False, description="Use SSL for email")
+    EMAIL_HOST_USER: Optional[EmailStr] = Field(None, description="Email host user")
+    EMAIL_HOST_PASSWORD: Optional[str] = Field(None, description="Email host password")
+    DEFAULT_FROM_EMAIL: Optional[str] = Field(None, description="Default from email")
