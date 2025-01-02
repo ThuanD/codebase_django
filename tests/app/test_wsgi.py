@@ -8,7 +8,7 @@ class TestWSGI(unittest.TestCase):
     """Test the WSGI module."""
 
     @patch("app.wsgi.argparse.ArgumentParser")
-    def test_settings_from_command_line(self, mock_argparse: MagicMock) -> None:
+    def test_settings_from_command_line(self, mock_argparse: MagicMock):
         """Test when --env argument is provided."""
         mock_args = MagicMock()
         mock_args.env = "app.settings.production"
@@ -25,7 +25,7 @@ class TestWSGI(unittest.TestCase):
         mock_argparse: MagicMock,
         mock_getenv: MagicMock,
         mock_load_dotenv: MagicMock,
-    ) -> None:
+    ):
         """Test when --env argument is not provided and .env file exists."""
         mock_args = MagicMock()
         mock_args.env = None
@@ -39,7 +39,7 @@ class TestWSGI(unittest.TestCase):
     @patch("app.wsgi.argparse.ArgumentParser")
     def test_default_settings(
         self, mock_argparse: MagicMock, mock_load_dotenv: MagicMock
-    ) -> None:
+    ):
         """Test when --env argument is not provided and .env file doesn't exist."""
         mock_args = MagicMock()
         mock_args.env = None

@@ -236,8 +236,8 @@ REST_FRAMEWORK = {
     ],
     # Throttling
     "DEFAULT_THROTTLE_RATES": {
+        "user": "60/minute",
         "anon": "30/minute",
-        "user": "120/minute",
     },
     # Pagination
     "PAGE_SIZE": 20,

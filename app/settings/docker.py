@@ -1,4 +1,4 @@
-from app.settings.common import *  # NOQA NOSONAR
+from .common import *  # NOQA NOSONAR
 
 # Application definition
 DJANGO_APPS += [

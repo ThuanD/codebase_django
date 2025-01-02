@@ -1,4 +1,4 @@
-from app.settings.common import *  # NOQA NOSONAR
+from .common import *  # NOQA NOSONAR
 
 # Application definition
 DJANGO_APPS += [
@@ -74,7 +74,7 @@ SHELL_PLUS_PRINT_SQL = True
 
 # django-spectacular
 SPECTACULAR_SETTINGS = {
-    "TITLE": "[APP][LOOCAL] API Documentation",
+    "TITLE": "[APP][LOCAL] API Documentation",
     "DESCRIPTION": "",
     "VERSION": "1.0.0",
     "SERVE_PUBLIC": False,

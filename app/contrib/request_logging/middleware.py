@@ -23,12 +23,14 @@ class RequestLoggingMiddleware:
         """Handle the request and response cycle."""
         request.id = str(uuid.uuid4())
 
-        if RequestBodyLogger.should_log_body(request):
+        should_log_body = RequestBodyLogger.should_log_body(request)
+
+        if should_log_body:
             self.log_request(request, START_REQUEST)
 
         response = self.get_response(request)
 
-        if RequestBodyLogger.should_log_body(request):
+        if should_log_body:
             self.log_request(request, END_REQUEST)
 
         return response
@@ -36,9 +38,6 @@ class RequestLoggingMiddleware:
     @staticmethod
     def get_request_body(request: HttpRequest) -> Optional[str]:
         """Get the request body if it should be logged."""
-        if not RequestBodyLogger.should_log_body(request):
-            return None
-
         if request.content_type == "application/x-www-form-urlencoded":
             body = request.POST.dict()
         else:

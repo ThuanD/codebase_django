@@ -32,16 +32,19 @@ urlpatterns = [
 if apps.is_installed("django.contrib.admin"):
     urlpatterns += i18n_patterns(
         path("admin/", admin.site.urls),
+        prefix_default_language=False,
     )
 
 if apps.is_installed("debug_toolbar"):
     urlpatterns += i18n_patterns(
         path("__debug__/", include("debug_toolbar.urls")),
+        prefix_default_language=False,
     )
 
 if apps.is_installed("drf_spectacular"):
     urlpatterns += i18n_patterns(
         path("api_doc/", include("apps.api_doc.urls")),
+        prefix_default_language=False,
     )
 
 if settings.DEBUG:

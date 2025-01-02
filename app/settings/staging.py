@@ -1,4 +1,4 @@
-from app.settings.common import *  # NOQA NOSONAR
+from .common import *  # NOQA NOSONAR
 
 EMAIL_SUBJECT_PREFIX = "[APP][STG]"
 
