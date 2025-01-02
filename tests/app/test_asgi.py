@@ -6,7 +6,7 @@ class TestASGI(unittest.TestCase):
     """Test the ASGI module."""
 
     @patch("django.core.asgi.get_asgi_application")
-    def test_asgi_application(self, mock_get_asgi_application: MagicMock) -> None:
+    def test_asgi_application(self, mock_get_asgi_application: MagicMock):
         """Test the ASGI application."""
         mock_application = MagicMock()
         mock_get_asgi_application.return_value = mock_application

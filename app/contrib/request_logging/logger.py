@@ -3,12 +3,11 @@ from typing import Any, Dict
 
 from django.http import HttpRequest
 
+from app.constants import LoggerConstant
+
 
 class RequestBodyLogger:
     """Process and log request bodies efficiently."""
-
-    MAX_BODY_SIZE = 1024 * 10  # 10KB
-    SENSITIVE_FIELDS = {"password", "token", "secret"}
 
     @classmethod
     @lru_cache(maxsize=100)
@@ -26,6 +25,6 @@ class RequestBodyLogger:
     def sanitize_body(cls, body: Dict[str, Any]) -> Dict[str, Any]:
         """Remove sensitive data from body."""
         sanitized = body.copy()
-        for key in cls.SENSITIVE_FIELDS & set(sanitized.keys()):
+        for key in LoggerConstant.SENSITIVE_FIELDS & set(sanitized.keys()):
             sanitized[key] = "***"
         return sanitized

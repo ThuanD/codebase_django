@@ -52,3 +52,13 @@
 ### Delete
 - poetry
 - flake8
+
+## [0.1.2] - 2025-01-02
+
+### Added
+- Add ipython to development dependencies
+- Using pydantic to validate env environment
+
+### Update
+- Update logging configuration
+- Increase test coverage

@@ -15,8 +15,17 @@ cache:
 	uv run python manage.py createcachetable
 
 test:
+	uv run python manage.py test
+
+coverage:
 	uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
 	uv run coverage html
+
+api-docs:
+	uv run python manage.py spectacular --file schema.yml
+
+admin:
+	DJANGO_SUPERUSER_PASSWORD=admin uv run python manage.py createsuperuser --username admin --email admin@example.com --noinput
 
 run:
 	uv run python manage.py runserver

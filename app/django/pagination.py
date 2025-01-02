@@ -1,6 +1,6 @@
 from rest_framework.pagination import PageNumberPagination
 
-from app.constants import Pagination
+from app.constants import PaginationConstant
 
 
 class CustomPagination(PageNumberPagination):
@@ -15,5 +15,5 @@ class CustomPagination(PageNumberPagination):
 
     """
 
-    max_page_size = Pagination.MAX_PAGE_SIZE
-    page_size_query_param = Pagination.PAGE_SIZE_QUERY_PARAM
+    max_page_size = PaginationConstant.MAX_PAGE_SIZE
+    page_size_query_param = PaginationConstant.PAGE_SIZE_QUERY_PARAM

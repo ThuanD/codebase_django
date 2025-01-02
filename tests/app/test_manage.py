@@ -15,7 +15,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
 
     @patch("manage.get_django_setting_module")
     @patch.dict("os.environ", {}, clear=True)
-    def test_django_import_error(self, mock_get_settings: MagicMock) -> None:
+    def test_django_import_error(self, mock_get_settings: MagicMock):
         """Test Django import error handling.
 
         Verifies that appropriate error is raised when Django is not installed
@@ -44,7 +44,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         self.assertIn(expected_error, str(context.exception))
 
     @patch("argparse.ArgumentParser.parse_known_args")
-    def test_settings_from_command_line(self, mock_parse_known_args: MagicMock) -> None:
+    def test_settings_from_command_line(self, mock_parse_known_args: MagicMock):
         """Test settings module resolution from command line arguments.
 
         Verifies that settings module is correctly resolved when provided
@@ -69,7 +69,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         self.assertEqual(result, "app.settings.production")
 
     @patch("argparse.ArgumentParser.parse_known_args")
-    def test_settings_from_env_file(self, mock_parse_known_args: MagicMock) -> None:
+    def test_settings_from_env_file(self, mock_parse_known_args: MagicMock):
         """Test settings module resolution from environment file.
 
         Verifies that settings module is correctly resolved when
@@ -95,7 +95,7 @@ class TestGetDjangoSettingModule(unittest.TestCase):
         self.assertEqual(result, "app.settings.staging")
 
     @patch("argparse.ArgumentParser.parse_known_args")
-    def test_default_settings(self, mock_parse_known_args: MagicMock) -> None:
+    def test_default_settings(self, mock_parse_known_args: MagicMock):
         """Test Django settings module resolution with default configuration.
 
         This test verifies that when no --settings argument is provided and

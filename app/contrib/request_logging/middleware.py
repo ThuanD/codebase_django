@@ -5,6 +5,7 @@ from typing import Callable, Optional
 
 from django.http import HttpRequest, HttpResponse
 
+from app.constants import LoggerConstant
 from app.contrib.request_logging.logger import RequestBodyLogger
 from app.message.middlewares import END_REQUEST, START_REQUEST
 
@@ -22,12 +23,14 @@ class RequestLoggingMiddleware:
         """Handle the request and response cycle."""
         request.id = str(uuid.uuid4())
 
-        if RequestBodyLogger.should_log_body(request):
+        should_log_body = RequestBodyLogger.should_log_body(request)
+
+        if should_log_body:
             self.log_request(request, START_REQUEST)
 
         response = self.get_response(request)
 
-        if RequestBodyLogger.should_log_body(request):
+        if should_log_body:
             self.log_request(request, END_REQUEST)
 
         return response
@@ -35,9 +38,6 @@ class RequestLoggingMiddleware:
     @staticmethod
     def get_request_body(request: HttpRequest) -> Optional[str]:
         """Get the request body if it should be logged."""
-        if not RequestBodyLogger.should_log_body(request):
-            return None
-
         if request.content_type == "application/x-www-form-urlencoded":
             body = request.POST.dict()
         else:
@@ -50,7 +50,7 @@ class RequestLoggingMiddleware:
                 logger.warning("API LOGGING: Failed to process request body: %s", error)
                 return None
 
-        if len(str(body)) > RequestBodyLogger.MAX_BODY_SIZE:
+        if len(str(body)) > LoggerConstant.MAX_BODY_SIZE:
             return "BODY TOO LARGE"
         return json.dumps(RequestBodyLogger.sanitize_body(body))
 
