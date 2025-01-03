@@ -3,7 +3,7 @@ from typing import Any, Dict
 
 from django.http import HttpRequest
 
-from app.constants import LoggerConstant
+from app.contrib.constants import LoggerConstant
 
 
 class RequestBodyLogger:

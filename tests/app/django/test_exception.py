@@ -8,8 +8,9 @@ from django.test import override_settings
 from rest_framework import exceptions, status
 from rest_framework.response import Response
 
-from app.config import config
-from app.django.exception import APIExceptionHandler, UnexpectedError, exception_handler
+from app.contrib.config import config
+from app.contrib.error_code import ErrorCode
+from app.contrib.exception import APIExceptionHandler, exception_handler
 
 
 class TestExceptionHandler(TestCase):
@@ -89,7 +90,7 @@ class TestExceptionHandler(TestCase):
         # Call the handler with the unexpected exception
         response = APIExceptionHandler().handle_exception(unexpected_exception, {})
 
-        self.assertEqual(response.status_code, UnexpectedError.status_code)
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         content = json.loads(response.content)
-        self.assertEqual(content["code"], UnexpectedError.default_code)
-        self.assertEqual(content["message"], UnexpectedError.default_detail)
+        self.assertEqual(content["code"], ErrorCode.INTERNAL_SERVER_ERROR_CODE)
+        self.assertEqual(content["message"], ErrorCode.INTERNAL_SERVER_ERROR_DETAIL)

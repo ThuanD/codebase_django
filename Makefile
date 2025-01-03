@@ -1,4 +1,4 @@
-.PHONY: init update-deps secret_key static migrate cache test run gunicorn shell run-hooks
+.PHONY: init key static migrations migrate cache messages compilemessages test coverage docs admin run gunicorn shell lint lint-fix hooks
 init:
 	uv pip install -r pyproject.toml
 
@@ -8,11 +8,20 @@ key:
 static:
 	uv run python manage.py collectstatic --no-input
 
+migrations:
+	uv run python manage.py makemigrations
+
 migrate:
 	uv run python manage.py migrate
 
 cache:
 	uv run python manage.py createcachetable
+
+messages:
+	uv run python manage.py makemessages -l vi
+
+compilemessages:
+	uv run python manage.py compilemessages
 
 test:
 	uv run python manage.py test
@@ -21,7 +30,7 @@ coverage:
 	uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
 	uv run coverage html
 
-api-docs:
+docs:
 	uv run python manage.py spectacular --file schema.yml
 
 admin:

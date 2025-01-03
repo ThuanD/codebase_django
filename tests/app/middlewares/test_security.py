@@ -16,7 +16,8 @@ class TestSecurityHeadersMiddleware(unittest.TestCase):
         """Set up the test environment."""
         self.factory = RequestFactory()
         self.middleware = SecurityHeadersMiddleware(
-            get_response=Mock(return_value=HttpResponse()))
+            get_response=Mock(return_value=HttpResponse())
+        )
 
     @override_settings(DEBUG=False)
     def test_add_security_headers(self):
@@ -27,8 +28,9 @@ class TestSecurityHeadersMiddleware(unittest.TestCase):
         self.assertEqual(response["X-Frame-Options"], "DENY")
         self.assertEqual(response["X-XSS-Protection"], "1; mode=block")
         self.assertEqual(response["X-Content-Type-Options"], "nosniff")
-        self.assertEqual(response["Strict-Transport-Security"],
-                         "max-age=31536000; includeSubDomains")
+        self.assertEqual(
+            response["Strict-Transport-Security"], "max-age=31536000; includeSubDomains"
+        )
         self.assertIn("Content-Security-Policy", response)
 
     @override_settings(DEBUG=True)

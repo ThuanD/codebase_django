@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import OpenApiExample
 
-from app.django.exception import RequestBodyValidationError
+from app.contrib.exception import RequestBodyValidationError
 
 ERROR_REQUEST_BODY_DESCRIPTION = _(
     "Check the request body schema to see the validation information for the fields. "

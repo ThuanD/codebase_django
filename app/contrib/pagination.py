@@ -1,6 +1,6 @@
 from rest_framework.pagination import PageNumberPagination
 
-from app.constants import PaginationConstant
+from app.contrib.constants import PaginationConstant
 
 
 class CustomPagination(PageNumberPagination):

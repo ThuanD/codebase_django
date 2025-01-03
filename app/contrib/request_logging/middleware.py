@@ -5,9 +5,8 @@ from typing import Callable, Optional
 
 from django.http import HttpRequest, HttpResponse
 
-from app.constants import LoggerConstant
+from app.contrib.constants import LoggerConstant
 from app.contrib.request_logging.logger import RequestBodyLogger
-from app.message.middlewares import END_REQUEST, START_REQUEST
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +25,12 @@ class RequestLoggingMiddleware:
         should_log_body = RequestBodyLogger.should_log_body(request)
 
         if should_log_body:
-            self.log_request(request, START_REQUEST)
+            self.log_request(request, "Start of request.")
 
         response = self.get_response(request)
 
         if should_log_body:
-            self.log_request(request, END_REQUEST)
+            self.log_request(request, "End of request.")
 
         return response
 

@@ -8,7 +8,8 @@ from django.test import override_settings
 from constance import config as constance_config
 from rest_framework import status
 
-from app.config import config
+from app.contrib.config import config
+from app.contrib.error_code import ErrorCode
 from app.contrib.health_check.middleware import (
     HealthCheckMiddleware,
     MaintenanceMiddleware,
@@ -92,8 +93,8 @@ class TestMaintenanceMiddleware(TestCase):
         self.assertIsInstance(response, JsonResponse)
         self.assertEqual(response.status_code, status.HTTP_503_SERVICE_UNAVAILABLE)
         content = json.loads(response.content)
-        self.assertEqual(content["code"], "E0001")
-        self.assertEqual(content["message"], "Server is under maintenance.")
+        self.assertEqual(content["code"], ErrorCode.SERVICE_UNAVAILABLE_CODE)
+        self.assertEqual(content["message"], ErrorCode.SERVICE_UNAVAILABLE_DETAIL)
 
     @override_settings(LANGUAGES=[("en", "English"), ("vi", "Vietnamese")])
     def test_get_allowed_paths(self):

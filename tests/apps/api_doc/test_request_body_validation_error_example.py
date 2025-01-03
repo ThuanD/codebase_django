@@ -2,7 +2,7 @@ import unittest
 
 from apps.api_doc.docs import RequestBodyValidationErrorExample
 
-from app.django.exception import RequestBodyValidationError
+from app.contrib.exception import RequestBodyValidationError
 
 
 class TestRequestBodyValidationErrorExample(unittest.TestCase):

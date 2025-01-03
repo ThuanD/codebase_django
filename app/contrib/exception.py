@@ -4,16 +4,12 @@ from typing import Any, Dict, Optional
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, JsonResponse
 
-from rest_framework import exceptions
+from rest_framework import exceptions, status
 from rest_framework.response import Response
-from rest_framework.status import (
-    HTTP_500_INTERNAL_SERVER_ERROR,
-    HTTP_503_SERVICE_UNAVAILABLE,
-)
 from rest_framework.views import set_rollback
 
-from app.config import config
-from app.message.errors import ErrorCode
+from app.contrib.config import config
+from app.contrib.error_code import ErrorCode
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +23,7 @@ class APIExceptionHandler:
 
         if not isinstance(exc, exceptions.APIException):
             self._log_unexpected_error(exc)
-            exc = UnexpectedError()
+            exc = InternalServerError()
         return self._handle_api_exception(exc)
 
     def _normalize_exception(self, exc: Exception) -> Exception:
@@ -84,12 +80,20 @@ class APIExceptionHandler:
 exception_handler = APIExceptionHandler().handle_exception
 
 
-class UnexpectedError(exceptions.APIException):
-    """Unexpected error."""
+class InternalServerError(exceptions.APIException):
+    """Internal server error."""
 
-    status_code = HTTP_500_INTERNAL_SERVER_ERROR
-    default_detail = ErrorCode.UNEXPECTED_ERROR_DETAIL
-    default_code = ErrorCode.UNEXPECTED_ERROR_CODE
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    default_detail = ErrorCode.INTERNAL_SERVER_ERROR_DETAIL
+    default_code = ErrorCode.INTERNAL_SERVER_ERROR_CODE
+
+
+class ServiceUnavailable(exceptions.APIException):
+    """Service Unavailable."""
+
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    default_detail = ErrorCode.SERVICE_UNAVAILABLE_DETAIL
+    default_code = ErrorCode.SERVICE_UNAVAILABLE_CODE
 
 
 class RequestBodyValidationError(exceptions.ValidationError):
@@ -105,11 +109,3 @@ class RequestBodyValidationError(exceptions.ValidationError):
             "code": self.default_code,
             "message": self.detail,
         }
-
-
-class ServerIsUnderMaintenance(exceptions.APIException):
-    """Server is under maintenance."""
-
-    status_code = HTTP_503_SERVICE_UNAVAILABLE
-    default_detail = ErrorCode.MAINTENANCE_ERROR_DETAIL
-    default_code = ErrorCode.MAINTENANCE_ERROR_CODE

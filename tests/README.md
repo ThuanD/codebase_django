@@ -10,7 +10,7 @@ uv run python manage.py test
 
 ## Run specific test file
 ```bash
-uv run python manage.py test tests.app.django.test_exception --settings=app.settings.local_test
+uv run python manage.py test tests.app.contrib.test_exception --settings=app.settings.local_test
 ```
 
 ## Run with coverage

@@ -8,9 +8,8 @@ from django.test import RequestFactory
 
 from rest_framework.status import HTTP_200_OK
 
-from app.constants import LoggerConstant
+from app.contrib.constants import LoggerConstant
 from app.contrib.request_logging.middleware import RequestLoggingMiddleware
-from app.message.middlewares import START_REQUEST
 
 
 class TestRequestLoggingMiddleware(unittest.TestCase):
@@ -40,7 +39,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
         """Test logging a request."""
         request = self.factory.get("/test/", {"param": "value"})
         request.id = "123456"
-        RequestLoggingMiddleware.log_request(request, START_REQUEST)
+        RequestLoggingMiddleware.log_request(request, "Start of request.")
 
         expected_log = (
             "[request_id=123456, method=GET, content_type=, path=/test/, "
@@ -60,7 +59,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
             content_type="application/json",
         )
         request.id = "123456"
-        RequestLoggingMiddleware.log_request(request, START_REQUEST)
+        RequestLoggingMiddleware.log_request(request, "Start of request.")
 
         expected_log = (
             "[request_id=123456, method=POST, content_type=application/json, "

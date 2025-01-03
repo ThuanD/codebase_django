@@ -44,9 +44,13 @@ IS_PRODUCTION = django_settings_module == "app.settings.production"
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # Load and validate security configuration
-env_settings = EnvSettings(
-    _case_sensitive=False, _env_file=env_file, _env_file_encoding="utf-8"
-)
+try:
+    env_settings = EnvSettings(
+        _case_sensitive=False, _env_file=env_file, _env_file_encoding="utf-8"
+    )
+except Exception as e:
+    logging.error("\033[91mERROR: Environment validation error: %s\033[0m", e)
+    sys.exit(1)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env_settings.SECRET_KEY
@@ -228,7 +232,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_VERSIONING_CLASS": None,
     # Generic view behavior
-    "DEFAULT_PAGINATION_CLASS": "app.django.pagination.CustomPagination",
+    "DEFAULT_PAGINATION_CLASS": "app.contrib.pagination.CustomPagination",
     "DEFAULT_FILTER_BACKENDS": [
         "rest_framework.filters.SearchFilter",
         "django_filters.rest_framework.DjangoFilterBackend",
@@ -246,7 +250,7 @@ REST_FRAMEWORK = {
     "ALLOWED_VERSIONS": None,
     "VERSION_PARAM": "version",
     # Exception handling
-    "EXCEPTION_HANDLER": "app.django.exception.exception_handler",
+    "EXCEPTION_HANDLER": "app.contrib.exception.exception_handler",
 }
 
 # SMTP Gmail

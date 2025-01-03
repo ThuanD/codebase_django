@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-12 18:42+0000\n"
+"POT-Creation-Date: 2025-01-03 04:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,40 +18,37 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: app/settings/common.py:201
+#: app/contrib/error_code.py:9
+msgid "Internal Server Error."
+msgstr "Lỗi máy chủ nội bộ."
+
+#: app/contrib/error_code.py:12
+msgid "Service Unavailable."
+msgstr "Dịch vụ không khả dụng."
+
+#: app/settings/common.py:189
 msgid "English"
 msgstr "Tiếng Anh"
 
-#: app/settings/common.py:202
+#: app/settings/common.py:190
 msgid "Vietnamese"
 msgstr "Tiếng Việt"
 
-#: app/settings/common.py:361
+#: app/settings/common.py:274
 msgid "Maintenance mode"
 msgstr "Chế độ bảo trì"
 
-#: app/settings/common.py:365
+#: app/settings/common.py:278
 msgid "Maintenance configuration"
 msgstr "Cấu hình bảo trì"
 
-#: app/message/errors.py:5
-msgid "Server is under maintenance."
-msgstr "Máy chủ đang được bảo trì."
-
-#: app/message/middlewares.py:4
-msgid "Start of request."
-msgstr "Bắt đầu yêu cầu."
-
-#: app/message/middlewares.py:5
-msgid "End of request."
-msgstr "Kết thúc yêu cầu."
-
-#: apps/api_doc/docs/__init__.py:8
+#: apps/api_doc/docs/__init__.py:7
 msgid ""
 "Check the request body schema to see the validation information for the "
 "fields. Error `message` are mutable."
-msgstr ""
+msgstr "Kiểm tra schema của request body để xem thông tin validation cho các trường. "
+"Lỗi `message` là có thể thay đổi."
 
-#: apps/api_doc/docs/__init__.py:20
+#: apps/api_doc/docs/__init__.py:24
 msgid "Error message for this field!"
 msgstr "Thông báo lỗi cho trường này!"

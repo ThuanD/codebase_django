@@ -6,7 +6,7 @@ from django.test import override_settings
 
 from constance import config as constance_config
 
-from app.config import config
+from app.contrib.config import config
 
 
 class TestConfigWrapper(TestCase):
@@ -44,7 +44,7 @@ class TestConfigWrapper(TestCase):
     @patch.dict("sys.modules", {"constance": None})
     def test_import_error_handling(self):
         """Test handling import errors."""
-        from app.config import ConfigWrapper
+        from app.contrib.config import ConfigWrapper
 
         config_wrapper = ConfigWrapper()
         self.assertIsNone(config_wrapper.constance_config)

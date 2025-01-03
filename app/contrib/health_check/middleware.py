@@ -4,10 +4,10 @@ from typing import Callable, List
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, JsonResponse
 
-from app.config import config
-from app.constants import HEALTH_CHECK_API
+from app.contrib.config import config
+from app.contrib.constants import HEALTH_CHECK_API
+from app.contrib.exception import ServiceUnavailable
 from app.contrib.health_check.throttling import HealthCheckThrottle
-from app.django.exception import ServerIsUnderMaintenance
 
 
 class HealthCheckMiddleware:
@@ -51,6 +51,6 @@ class MaintenanceMiddleware:
         if self.is_allowed_path(request) or not config.MAINTENANCE_ENABLE:
             return self.get_response(request)
         return JsonResponse(
-            ServerIsUnderMaintenance().get_full_details(),
-            status=ServerIsUnderMaintenance.status_code,
+            ServiceUnavailable().get_full_details(),
+            status=ServiceUnavailable.status_code,
         )

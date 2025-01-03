@@ -9,46 +9,74 @@ A production-ready Django project template with:
 - Docker support
 - Code quality tools (ruff, pre-commit)
 
-### Setup
+### Local setup
+
+#### Pre-requisites
+
+- Python 3.12
+- uv 0.5.5
+- GNU Make 4.3
 
 1. Clone this repository:
     ```bash
-    git clone https://github.com/ThuanD/base_django.git
-    cd base_django
+    git clone https://github.com/ThuanD/codebase_django.git
+    cd codebase_django
     ```
 2. Create virtual environment:
     ```bash
-    python -m venv venv
+    uv venv --python 3.12
     ```
-3. Copy `.env.example` to `.env` and configure:
+3. Install dependencies:
+    ```bash
+    make init
+    ```
+4. Copy `.env.example` to `.env` and configure:
     ```bash
     cp .env.example .env
     ```
    Create secret key and update `SECRET_KEY` in `.env` file
    ```bash
-    uv run python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+    make key
     ```
-4. Install dependencies:
+5. Collect static files:
     ```bash
-    pip install -r requirements.txt
+    make static
     ```
-5. Run migrations:
+6. Run migrations:
     ```bash
-    python manage.py migrate
+    make migrate
     ```
-6. Start server:
+7. Create cache table:
     ```bash
-    python manage.py runserver
+    make cahce
+    ```
+8. Start server:
+    ```bash
+    make run
+    ```
+9. To run server with gunicorn:
+    ```bash
+    make gunicorn
+    ```
+10. Create superuser:
+
+    Update `DJANGO_SUPERUSER_PASSWORD, username, email` in Makefile and run the following command:
+    ```bash
+    make admin
     ```
 
 ### Running Tests
 
-To run all tests:
+1. To run all tests with django:
 
-```bash
-  uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
-  uv run coverage html
-```
+   ```bash
+     make test
+   ```
+2. To run all tests with coverage:
+
+   ```bash
+     make coverage
+   ```
 
 ### Lint check
 
@@ -59,4 +87,23 @@ To run all tests:
 2. Check and fix
     ```bash
     uvx ruff check --fix
+    ```
+
+### Docker setup
+
+1. Build docker image:
+    ```bash
+    docker compose build
+    ```
+2. Run docker container:
+    ```bash
+    docker compose up
+    ```
+3. Stop docker container:
+    ```bash
+    docker compose down
+    ```
+4. Remove docker image:
+    ```bash
+    docker compose down --rmi all
     ```
