@@ -101,7 +101,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
         mock_logger.assert_not_called()
 
     @patch("app.contrib.request_logging.middleware.logger")
-    def test_log_request_content_type_form_urlencoded(self, _: Mock):
+    def test_log_request_content_type_form_urlencoded(self, _mock_logger: Mock):
         """Test logging a request with content type form urlencoded."""
         data = b"data=value"
         data_json = {"data": "value"}

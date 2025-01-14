@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 class APIExceptionHandler:
     """Exception handler for API exceptions."""
 
-    def handle_exception(self, exc: Exception, _: Dict[str, Any]) -> Optional[Response]:
+    def handle_exception(
+        self, exc: Exception, _context: Dict[str, Any]
+    ) -> Optional[Response]:
         """Handle main exception."""
         exc = self._normalize_exception(exc)
 
@@ -98,6 +100,8 @@ class ServiceUnavailable(exceptions.APIException):
 
 class RequestBodyValidationError(exceptions.ValidationError):
     """Request body validation error."""
+
+    status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
 
     def __init__(self, detail: Dict[str, Any]) -> None:
         """Initialize the validation error with the detail."""

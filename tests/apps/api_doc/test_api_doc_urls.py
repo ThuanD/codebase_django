@@ -14,21 +14,21 @@ class TestAPIDocURLs(unittest.TestCase):
 
     def test_redoc_url(self) -> None:
         """Test the redoc URL."""
-        url = reverse("api_doc:redoc")
-        self.assertEqual(url, "/api_doc/redoc/")
+        url = reverse("apidocs:redoc")
+        self.assertEqual(url, "/apidocs/redoc/")
         view = resolve(url)
         self.assertEqual(view.func.view_class, SpectacularRedocView)
 
     def test_swagger_url(self) -> None:
         """Test the swagger URL."""
-        url = reverse("api_doc:swagger-ui")
-        self.assertEqual(url, "/api_doc/swagger/")
+        url = reverse("apidocs:swagger-ui")
+        self.assertEqual(url, "/apidocs/swagger/")
         view = resolve(url)
         self.assertEqual(view.func.view_class, SpectacularSwaggerView)
 
     def test_schema_url(self) -> None:
         """Test the schema URL."""
-        url = reverse("api_doc:schema")
-        self.assertEqual(url, "/api_doc/schema/")
+        url = reverse("apidocs:schema")
+        self.assertEqual(url, "/apidocs/schema/")
         view = resolve(url)
         self.assertEqual(view.func.view_class, SpectacularJSONAPIView)

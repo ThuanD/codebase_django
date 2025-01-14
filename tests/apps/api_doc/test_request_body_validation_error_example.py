@@ -1,6 +1,6 @@
 import unittest
 
-from apps.api_doc.docs import RequestBodyValidationErrorExample
+from apps.apidocs.docs import RequestBodyValidationErrorExample
 
 from app.contrib.exception import RequestBodyValidationError
 

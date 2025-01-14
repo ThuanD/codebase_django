@@ -85,7 +85,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
 ]
 CUSTOM_APPS = [
-    "apps.api_doc",
+    "apps.apidocs",
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
@@ -212,7 +212,7 @@ AUTH_USER_MODEL = "auth.User"
 SHELL_PLUS = "ipython"
 SHELL_PLUS_PRINT_SQL = False
 SHELL_PLUS_IMPORTS = [
-    "from app.config import config",
+    "from app.contrib.config import config",
 ]
 
 LOGGING = get_logging_config("INFO", 100)

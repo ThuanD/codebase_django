@@ -12,7 +12,7 @@ class HealthCheckThrottle(AnonRateThrottle):
     rate = "60/minute"  # Limit 60 requests/minute
 
     def get_cache_key(
-        self, request: HttpRequest, _: Callable[..., HttpResponseBase]
+        self, request: HttpRequest, _view: Callable[..., HttpResponseBase]
     ) -> str:
         """Generate unique cache key for request."""
         return f"health_check_throttle_{request.META.get('REMOTE_ADDR', '')}"

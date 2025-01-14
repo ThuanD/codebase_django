@@ -6,14 +6,14 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
-app_name = "api_doc"
+app_name = "apidocs"
 urlpatterns = [
     path(
-        "redoc/", SpectacularRedocView.as_view(url_name="api_doc:schema"), name="redoc"
+        "redoc/", SpectacularRedocView.as_view(url_name="apidocs:schema"), name="redoc"
     ),
     path(
         "swagger/",
-        SpectacularSwaggerView.as_view(url_name="api_doc:schema"),
+        SpectacularSwaggerView.as_view(url_name="apidocs:schema"),
         name="swagger-ui",
     ),
     path(

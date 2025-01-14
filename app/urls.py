@@ -43,7 +43,7 @@ if apps.is_installed("debug_toolbar"):
 
 if apps.is_installed("drf_spectacular"):
     urlpatterns += i18n_patterns(
-        path("api_doc/", include("apps.api_doc.urls")),
+        path("apidocs/", include("apps.apidocs.urls")),
         prefix_default_language=False,
     )
 
