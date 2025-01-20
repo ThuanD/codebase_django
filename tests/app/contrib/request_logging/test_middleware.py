@@ -39,7 +39,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
         """Test logging a request."""
         request = self.factory.get("/test/", {"param": "value"})
         request.id = "123456"
-        RequestLoggingMiddleware.log_request(request, "Start of request.")
+        self.middleware.log_request(request, "Start of request.")
 
         expected_log = (
             "[request_id=123456, method=GET, content_type=, path=/test/, "
@@ -59,7 +59,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
             content_type="application/json",
         )
         request.id = "123456"
-        RequestLoggingMiddleware.log_request(request, "Start of request.")
+        self.middleware.log_request(request, "Start of request.")
 
         expected_log = (
             "[request_id=123456, method=POST, content_type=application/json, "
@@ -111,7 +111,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
             content_type="application/x-www-form-urlencoded",
         )
 
-        body = RequestLoggingMiddleware.get_request_body(request)
+        body = self.middleware.get_request_body(request)
 
         self.assertEqual(body, json.dumps(data_json))
 
@@ -122,7 +122,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
             "/test/", data="invalid_json", content_type="application/json"
         )
 
-        body = RequestLoggingMiddleware.get_request_body(request)
+        body = self.middleware.get_request_body(request)
 
         self.assertIsNone(body)
         mock_logger.warning.assert_called_once_with(
@@ -140,7 +140,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
 
         self.assertIsNone(body)
         log_message = mock_logger.warning.call_args[0][0]
-        self.assertIn("Failed to process request body", log_message)
+        self.assertIn("Failed to decode request body as UTF-8.", log_message)
 
     @patch.object(LoggerConstant, "MAX_BODY_SIZE", 1)
     def test_logs_body_max_size_exceed(self):

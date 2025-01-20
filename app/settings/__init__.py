@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional
 
-from pydantic import AnyHttpUrl, EmailStr, Field
+from pydantic import AnyHttpUrl, EmailStr, Field, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -10,7 +10,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 def get_logging_config(
     log_level: str = "INFO", backup_count: int = 10, max_bytes: int = 5242880
 ) -> dict:
-    """Get logging configuration based on log level."""
+    """Get logging configuration based on log level.
+
+    Args:
+        log_level: The logging level (e.g., "DEBUG", "INFO", "WARNING").
+        backup_count: The number of backup log files to keep.
+        max_bytes: The maximum size of a log file before rotation.
+
+    Returns:
+        A dictionary containing the logging configuration.
+
+    """
     log_path = Path(BASE_DIR) / "logs"
     log_path.mkdir(parents=True, exist_ok=True)
 
@@ -86,23 +96,40 @@ def get_logging_config(
 
 
 class EnvSettings(BaseSettings):
-    """Env settings."""
+    """Environment settings for the application."""
 
     # Django settings
     DJANGO_SETTINGS_MODULE: str = Field(..., description="Django settings module")
     DEBUG: bool = Field(False, description="Enable debug mode")
-    SECRET_KEY: str = Field(..., description="Secret key for Django")
+    SECRET_KEY: SecretStr = Field(..., description="Secret key for Django")
 
     # Host settings
-    ALLOWED_HOSTS: List[str] = Field(description="List of allowed hosts")
-    CORS_ALLOWED_ORIGINS: List[AnyHttpUrl] = Field(description="CORS allowed origins")
-    CSRF_TRUSTED_ORIGINS: List[AnyHttpUrl] = Field(description="CSRF trusted origins")
+    ALLOWED_HOSTS: List[str] = Field(..., description="List of allowed hosts")
+    CORS_ALLOWED_ORIGINS: List[AnyHttpUrl] = Field(
+        ..., description="CORS allowed origins"
+    )
+    CSRF_TRUSTED_ORIGINS: List[AnyHttpUrl] = Field(
+        ..., description="CSRF trusted origins"
+    )
+
+    # Database settings
+    DATABASE_URL: Optional[str] = Field(None, description="Database connection URL")
+
+    # Cache settings
+    CACHE_URL: Optional[str] = Field(None, description="Cache connection URL")
 
     # Email settings
     EMAIL_HOST: str = Field("smtp.gmail.com", description="Email host")
-    EMAIL_PORT: int = Field(587, description="Email port")
+    EMAIL_PORT: PositiveInt = Field(587, description="Email port")
     EMAIL_USE_TLS: bool = Field(True, description="Use TLS for email")
     EMAIL_USE_SSL: bool = Field(False, description="Use SSL for email")
     EMAIL_HOST_USER: Optional[EmailStr] = Field(None, description="Email host user")
-    EMAIL_HOST_PASSWORD: Optional[str] = Field(None, description="Email host password")
+    EMAIL_HOST_PASSWORD: Optional[SecretStr] = Field(
+        None, description="Email host password"
+    )
     DEFAULT_FROM_EMAIL: Optional[str] = Field(None, description="Default from email")
+
+    # Health Check Endpoint
+    HEALTH_CHECK_ENDPOINT: str = Field(
+        "/api/health_check/", description="URL for the health check endpoint"
+    )

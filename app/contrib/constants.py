@@ -1,5 +1,8 @@
-# Endpoint to health check API service
-HEALTH_CHECK_API = "/api/health_check/"
+class CacheKey:
+    """Class for cache keys."""
+
+    HEALTH_CHECK_KEY = "health_check"
+    HEALTH_CHECK_VALUE = "it works!"
 
 
 class LoggerConstant:

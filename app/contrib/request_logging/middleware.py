@@ -36,7 +36,20 @@ class RequestLoggingMiddleware:
 
     @staticmethod
     def get_request_body(request: HttpRequest) -> Optional[str]:
-        """Get the request body if it should be logged."""
+        """Get the request body if it should be logged.
+
+        Args:
+            request: The HttpRequest object.
+
+        Returns:
+            The request body as a JSON string if it should be logged,
+            "BODY TOO LARGE" if the body exceeds the maximum size,
+            or None if the body cannot be decoded or shouldn't be logged.
+
+        """
+        if not RequestBodyLogger.should_log_body(request):
+            return None
+
         if request.content_type == "application/x-www-form-urlencoded":
             body = request.POST.dict()
         else:
@@ -45,8 +58,13 @@ class RequestLoggingMiddleware:
             except json.JSONDecodeError:
                 logger.warning("API LOGGING: Failed to decode request body.")
                 return None
+            except UnicodeDecodeError:
+                logger.warning("API LOGGING: Failed to decode request body as UTF-8.")
+                return None
             except Exception as error:
-                logger.warning("API LOGGING: Failed to process request body: %s", error)
+                logger.exception(
+                    "API LOGGING: Failed to process request body: %s", error
+                )
                 return None
 
         if len(str(body)) > LoggerConstant.MAX_BODY_SIZE:

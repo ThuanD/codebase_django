@@ -11,7 +11,10 @@ services:
       - .:/app
       - media:/app/media/
       - staticfiles:/app/staticfiles/
-    command: uv run gunicorn app.wsgi:application -b 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=app.settings.docker -w 4 --timeout 300 --reload
+    command: >
+      bash -c " python manage.py migrate --settings=app.settings.docker
+      && python manage.py collectstatic --noinput
+      && gunicorn --worker 4 --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=app.settings.docker --timeout 120 --keep-alive 5 app.wsgi:application --reload"
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     env_file: .env

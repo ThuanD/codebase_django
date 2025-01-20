@@ -35,11 +35,6 @@ if not load_dotenv(env_file):
         sys.exit(1)
     django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
 
-IS_LOCAL = django_settings_module == "app.settings.local"
-IS_LOCAL_TEST = django_settings_module == "app.settings.local_test"
-IS_STAGING = django_settings_module == "app.settings.staging"
-IS_PRODUCTION = django_settings_module == "app.settings.production"
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -96,8 +91,8 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "app.contrib.health_check.middleware.MaintenanceMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "app.contrib.health_check.middleware.MaintenanceMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "app.contrib.request_logging.middleware.RequestLoggingMiddleware",
@@ -183,7 +178,7 @@ USE_I18N = True
 USE_TZ = True
 
 # locale
-LOCALE_PATHS = (BASE_DIR / "locale",)
+LOCALE_PATHS = (BASE_DIR / "app/locale",)
 LANGUAGE_DEFAULT = "en"
 LANGUAGES = [
     ("en", _("English")),
@@ -266,18 +261,51 @@ DEFAULT_FROM_EMAIL = env_settings.DEFAULT_FROM_EMAIL
 EMAIL_SUBJECT_PREFIX = "[APP]"
 
 MAINTENANCE_ENABLE = False
+MAINTENANCE_MESSAGE = "We are currently undergoing maintenance. We will be back soon."
+MAINTENANCE_ALLOWED_URLS = []
+MAINTENANCE_ALLOWED_IPS = []
 
 # django-constance
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_CONFIG = {
     # Maintenance configuration
-    "MAINTENANCE_ENABLE": (MAINTENANCE_ENABLE, _("Maintenance mode"), bool),
+    "MAINTENANCE_ENABLE": (
+        MAINTENANCE_ENABLE,  # Default value
+        _("Enable maintenance mode"),  # Help text
+        bool,  # Type
+    ),
+    "MAINTENANCE_MESSAGE": (
+        MAINTENANCE_MESSAGE,
+        _("Message to display during maintenance"),
+        str,
+    ),
+    "MAINTENANCE_ALLOWED_URLS": (
+        MAINTENANCE_ALLOWED_URLS,
+        _(
+            "List of URL patterns allowed during maintenance "
+            "(e.g., /admin/, /api/special-endpoint/)"
+        ),
+        list,
+    ),
+    "MAINTENANCE_ALLOWED_IPS": (
+        MAINTENANCE_ALLOWED_IPS,
+        _("List of IP addresses allowed during maintenance"),
+        list,
+    ),
 }
 CONSTANCE_CONFIG_FIELDSETS = (
     (
-        _("Maintenance configuration"),
+        _("Maintenance Mode Settings"),
         {
-            "fields": ("MAINTENANCE_ENABLE",),
+            "fields": (
+                "MAINTENANCE_ENABLE",
+                "MAINTENANCE_MESSAGE",
+                "MAINTENANCE_ALLOWED_URLS",
+                "MAINTENANCE_ALLOWED_IPS",
+            ),
         },
     ),
 )
+
+# Endpoint to health check API service
+HEALTH_CHECK_ENDPOINT = env_settings.HEALTH_CHECK_ENDPOINT

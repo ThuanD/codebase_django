@@ -2,14 +2,20 @@ from rest_framework import serializers
 
 
 class ErrorSerializer(serializers.Serializer):
-    """Serializer for error responses."""
+    """Serializer for error responses.
 
-    code = serializers.CharField()
-    message = serializers.CharField()
+    Used to define the structure of error responses in the API documentation.
+    """
+
+    code = serializers.CharField(help_text="Error code")
+    message = serializers.CharField(help_text="Error message")
 
 
 class ValidationErrorSerializer(serializers.Serializer):
-    """Serializer for validation errors."""
+    """Serializer for validation errors.
 
-    code = serializers.CharField()
-    message = serializers.DictField()
+    Used to define the structure of validation error responses in the API documentation.
+    """
+
+    code = serializers.CharField(help_text="Error code")
+    message = serializers.DictField(help_text="Validation error messages per field")

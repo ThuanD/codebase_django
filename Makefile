@@ -2,7 +2,7 @@
 
 install:
 	@echo "Installing dependencies..."
-	uv pip install -r pyproject.toml --dev
+	uv pip install -r pyproject.toml
 
 key:
 	@echo "Generating secret key..."
