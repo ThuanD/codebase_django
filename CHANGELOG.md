@@ -62,3 +62,15 @@
 ### Update
 - Update logging configuration
 - Increase test coverage
+
+## [0.1.3] - 2025-01-03
+- Combine config, constants, error_code, exception, pagination to contrib
+
+## [0.1.4] - 2025-01-20
+- Change app name from api_doc to apidocs
+- Update test structure
+
+## [0.2.0] - 2025-07-30
+- Improve Dockerfile for python
+- Add common function to setup django environment
+- Add Github CI to lint check and run test

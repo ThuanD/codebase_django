@@ -15,9 +15,7 @@ class TestSecurityHeadersMiddleware(unittest.TestCase):
     def setUp(self):
         """Set up the test environment."""
         self.factory = RequestFactory()
-        self.middleware = SecurityHeadersMiddleware(
-            get_response=Mock(return_value=HttpResponse())
-        )
+        self.middleware = SecurityHeadersMiddleware(get_response=Mock(return_value=HttpResponse()))
 
     @override_settings(DEBUG=False)
     def test_add_security_headers(self):

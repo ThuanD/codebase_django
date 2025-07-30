@@ -35,7 +35,7 @@ dev = [
 
 [tool.ruff]
 target-version = "py38"
-line-length = 88
+line-length = 100
 indent-width = 4
 extend-exclude = [
   "build",
@@ -79,7 +79,7 @@ lint.select = [
   "UP",  # py-upgrade
   "W",   # pycodestyle warnings
 ]
-lint.ignore = [ "D100", "D104", "D203", "D213" ]
+lint.ignore = [ "D100", "D104", "D203", "D213", "D401", "LOG015" ]
 lint.per-file-ignores."*/settings/*" = [ "F405" ]
 lint.per-file-ignores."tests/*" = [ "ANN201", "SLF001" ]
 # Allow unused variables when underscore-prefixed.
@@ -102,8 +102,10 @@ branch = true
 omit = [
   "*/migrations/*",
   "app/settings/*",
-  "app/config.py",
+  "app/asgi.py",
   "app/urls.py",
+  "app/wsgi.py",
+  "manage.py",
 ]
 
 [tool.coverage.report]

@@ -33,6 +33,11 @@ def get_logging_config(
                 "%(module)s.%(funcName)s(): %(message)s",
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             },
+            # "json": {
+            #     "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            #     "format": "%(asctime)s %(name)s %(levelname)s %(message)s",
+            #     "datefmt": "%Y-%m-%d %H:%M:%S"
+            # },
             "simple": {
                 "format": "[%(levelname)s] %(asctime)s %(message)s",
                 "datefmt": "%Y-%m-%d %H:%M:%S",
@@ -105,12 +110,8 @@ class EnvSettings(BaseSettings):
 
     # Host settings
     ALLOWED_HOSTS: List[str] = Field(..., description="List of allowed hosts")
-    CORS_ALLOWED_ORIGINS: List[AnyHttpUrl] = Field(
-        ..., description="CORS allowed origins"
-    )
-    CSRF_TRUSTED_ORIGINS: List[AnyHttpUrl] = Field(
-        ..., description="CSRF trusted origins"
-    )
+    CORS_ALLOWED_ORIGINS: List[AnyHttpUrl] = Field(..., description="CORS allowed origins")
+    CSRF_TRUSTED_ORIGINS: List[AnyHttpUrl] = Field(..., description="CSRF trusted origins")
 
     # Database settings
     DATABASE_URL: Optional[str] = Field(None, description="Database connection URL")
@@ -124,12 +125,20 @@ class EnvSettings(BaseSettings):
     EMAIL_USE_TLS: bool = Field(True, description="Use TLS for email")
     EMAIL_USE_SSL: bool = Field(False, description="Use SSL for email")
     EMAIL_HOST_USER: Optional[EmailStr] = Field(None, description="Email host user")
-    EMAIL_HOST_PASSWORD: Optional[SecretStr] = Field(
-        None, description="Email host password"
-    )
+    EMAIL_HOST_PASSWORD: Optional[SecretStr] = Field(None, description="Email host password")
     DEFAULT_FROM_EMAIL: Optional[str] = Field(None, description="Default from email")
 
     # Health Check Endpoint
     HEALTH_CHECK_ENDPOINT: str = Field(
         "/api/health_check/", description="URL for the health check endpoint"
     )
+
+    # Docker settings only
+    GUNICORN_WORKERS: PositiveInt = Field(4, description="Number of Gunicorn workers")
+    GUNICORN_TIMEOUT: PositiveInt = Field(120, description="Gunicorn request timeout in seconds")
+    GUNICORN_KEEP_ALIVE: PositiveInt = Field(5, description="Gunicorn keep-alive time in seconds")
+
+    UPDATE_DEPENDENCIES: bool = Field(True, description="Update dependencies on startup")
+    RUN_MIGRATIONS: bool = Field(True, description="Run database migrations on startup")
+    RUN_COLLECTSTATIC: bool = Field(True, description="Run collectstatic on startup")
+    SKIP_SETUP: bool = Field(False, description="Skip all setup steps if true")

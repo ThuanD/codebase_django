@@ -16,27 +16,22 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-from dotenv import load_dotenv
-
 from app.settings import EnvSettings, get_logging_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# get env
+# Environment should already be set up by manage.py/wsgi.py/asgi.py
 django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
-env = django_settings_module.split(".")[-1]
-# load .env file
-env_file = BASE_DIR / f".env.{env}"
-if not load_dotenv(env_file):
-    env_file = BASE_DIR / ".env"
-    if not load_dotenv(env_file):
-        logging.error("\033[91mERROR: Unable to find .env file.")
-        sys.exit(1)
-    django_settings_module = os.getenv("DJANGO_SETTINGS_MODULE")
+if not django_settings_module:
+    logging.error("\033[91mERROR: DJANGO_SETTINGS_MODULE not set.\033[0m")
+    sys.exit(1)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# Extract environment name and construct env file path
+env_name = django_settings_module.split(".")[-1]
+env_file = BASE_DIR / f".env.{env_name}"
+if not env_file.exists():
+    env_file = BASE_DIR / ".env"
 
 # Load and validate security configuration
 try:

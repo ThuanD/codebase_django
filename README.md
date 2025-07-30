@@ -22,15 +22,11 @@ A production-ready Django project template with:
     git clone https://github.com/ThuanD/codebase_django.git
     cd codebase_django
     ```
-2. Create virtual environment:
+2. Create virtual environment and Install dependencies:
     ```bash
-    uv venv --python 3.12
+    uv sync
     ```
-3. Install dependencies:
-    ```bash
-    make init
-    ```
-4. Copy `.env.example` to `.env` and configure:
+3. Copy `.env.example` to `.env` and edit configurations:
     ```bash
     cp .env.example .env
     ```
@@ -38,27 +34,27 @@ A production-ready Django project template with:
    ```bash
     make key
     ```
-5. Collect static files:
+4. Collect static files:
     ```bash
     make static
     ```
-6. Run migrations:
+5. Run migrations:
     ```bash
     make migrate
     ```
-7. Create cache table:
+6. Create cache table:
     ```bash
     make cahce
     ```
-8. Start server:
+7. Start server:
     ```bash
     make run
     ```
-9. To run server with gunicorn:
+8. To run server with gunicorn:
     ```bash
     make gunicorn
     ```
-10. Create superuser:
+9. Create superuser:
 
     Update `DJANGO_SUPERUSER_PASSWORD, username, email` in Makefile and run the following command:
     ```bash

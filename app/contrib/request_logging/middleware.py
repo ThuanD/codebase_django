@@ -62,9 +62,7 @@ class RequestLoggingMiddleware:
                 logger.warning("API LOGGING: Failed to decode request body as UTF-8.")
                 return None
             except Exception as error:
-                logger.exception(
-                    "API LOGGING: Failed to process request body: %s", error
-                )
+                logger.exception("API LOGGING: Failed to process request body: %s", error)
                 return None
 
         if len(str(body)) > LoggerConstant.MAX_BODY_SIZE:

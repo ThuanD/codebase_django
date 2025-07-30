@@ -1,0 +1,76 @@
+name: App CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Set up Python for GitHub Actions environment
+    - name: Set up Python (GitHub Actions)
+      if: ${{ !env.ACT }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    # Set up Python for local testing with act
+    - name: Set up Python (Local Testing)
+      if: ${{ env.ACT }}
+      run: |
+        apt-get update
+        apt-get install -y python3 python3-pip python3-venv curl
+        ln -sf python3 /usr/bin/python
+        python -m pip install --upgrade pip
+        
+    # Install uv package manager
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+    # Install project dependencies using uv
+    - name: Install dependencies
+      run: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        uv pip install --system -r pyproject.toml --group dev
+    
+    # Run code linting checks
+    - name: Run linting
+      run: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        uvx ruff check .
+
+    # Run test suite with coverage
+    - name: Run tests
+      run: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        cp .env.example .env
+        uv run python manage.py migrate
+        uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
+
+    # Generate coverage report
+    - name: Coverage report
+      run: |
+        export PATH="$HOME/.cargo/bin:$PATH"
+        uv run coverage report
+        uv run coverage html
+
+    # Upload coverage report as artifact
+    - name: Upload coverage report
+      if: ${{ !env.ACT }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: htmlcov/
+
+    # Optional: Upload to codecov
+    - name: Upload coverage to Codecov
+      if: ${{ !env.ACT }}
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.xml
+        fail_ci_if_error: true

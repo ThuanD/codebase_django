@@ -18,9 +18,7 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
     def setUp(self):
         """Set up the test environment."""
         self.factory = RequestFactory()
-        self.middleware = RequestLoggingMiddleware(
-            get_response=Mock(return_value=HttpResponse())
-        )
+        self.middleware = RequestLoggingMiddleware(get_response=Mock(return_value=HttpResponse()))
 
     def tearDown(self):
         """Tear down the test environment."""
@@ -118,23 +116,17 @@ class TestRequestLoggingMiddleware(unittest.TestCase):
     @patch("app.contrib.request_logging.middleware.logger")
     def test_application_json_encode_error(self, mock_logger: Mock):
         """Test logging a request with application json encode error."""
-        request = self.factory.post(
-            "/test/", data="invalid_json", content_type="application/json"
-        )
+        request = self.factory.post("/test/", data="invalid_json", content_type="application/json")
 
         body = self.middleware.get_request_body(request)
 
         self.assertIsNone(body)
-        mock_logger.warning.assert_called_once_with(
-            "API LOGGING: Failed to decode request body."
-        )
+        mock_logger.warning.assert_called_once_with("API LOGGING: Failed to decode request body.")
 
     @patch("app.contrib.request_logging.middleware.logger")
     def test_application_json_encode_unknown_error(self, mock_logger: Mock):
         """Test logging a request with application json encode unknown error."""
-        request = self.factory.post(
-            "/test/", data=b"\xff\xff", content_type="application/json"
-        )
+        request = self.factory.post("/test/", data=b"\xff\xff", content_type="application/json")
 
         body = RequestLoggingMiddleware.get_request_body(request)
 

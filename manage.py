@@ -1,31 +1,14 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 
-import argparse
-import os
 import sys
 
-from dotenv import load_dotenv
-
-
-def get_django_setting_module(env_file: str = ".env") -> str:
-    """Return django settings module."""
-    # Get django settings module from manage.py command
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--settings", help="Django settings module")
-    args, _ = parser.parse_known_args()
-    if args.settings:
-        return args.settings
-    # Get django settings module from .env file
-    if load_dotenv(env_file):
-        return os.getenv("DJANGO_SETTINGS_MODULE")
-    # Return django settings module default
-    return "app.settings.local"
+from app.utils.config import setup_django_environment
 
 
 def main() -> None:
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", get_django_setting_module())
+    setup_django_environment(from_command_line=True)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

@@ -34,9 +34,7 @@ class TestExceptionHandler(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         content = json.loads(response.content)
         self.assertEqual(content["code"], "permission_denied")
-        self.assertEqual(
-            content["message"], "You do not have permission to perform this action."
-        )
+        self.assertEqual(content["message"], "You do not have permission to perform this action.")
 
     def test_api_exception_with_auth_header(self):
         """Test the API exception with an authentication header."""

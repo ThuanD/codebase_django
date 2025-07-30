@@ -22,9 +22,7 @@ class APIExceptionHandler:
     with appropriate HTTP status codes and error details.
     """
 
-    def handle_exception(
-        self, exc: Exception, _context: Dict[str, Any]
-    ) -> Optional[Response]:
+    def handle_exception(self, exc: Exception, _context: Dict[str, Any]) -> Optional[Response]:
         """Handle main exception.
 
         Args:
@@ -121,7 +119,6 @@ class APIExceptionHandler:
             "API LOGGING: API exception: [%s: %s]",
             exc.__class__.__name__,
             data,
-            exc_info=True,
         )
 
     def _log_unexpected_error(self, exc: Exception) -> None:
@@ -134,7 +131,6 @@ class APIExceptionHandler:
         logger.exception(
             "API LOGGING: Unexpected exception occurred: [%s]",
             exc,
-            exc_info=True,
         )
 
 

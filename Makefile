@@ -2,7 +2,7 @@
 
 install:
 	@echo "Installing dependencies..."
-	uv pip install -r pyproject.toml
+	uv sync
 
 key:
 	@echo "Generating secret key..."
@@ -34,12 +34,12 @@ compile:
 
 test:
 	@echo "Running tests..."
-	uv run python manage.py test
+	uv run python manage.py test --settings=app.settings.local_test
 
 coverage:
 	@echo "Running tests with coverage report..."
 	uv run coverage run --source='.' manage.py test --settings=app.settings.local_test
-	uv run coverage html
+	uv run coverage report
 
 docs:
 	@echo "Generating API documentation..."

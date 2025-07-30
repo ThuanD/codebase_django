@@ -52,9 +52,7 @@ class HealthCheckMiddleware:
             connection.ensure_connection()
         except Exception as e:
             exception = ServiceUnavailable(detail=f"database unavailable: {e}")
-            return JsonResponse(
-                exception.get_full_details(), status=exception.status_code
-            )
+            return JsonResponse(exception.get_full_details(), status=exception.status_code)
 
         # Check cache connectivity (using the default cache)
         try:
@@ -63,9 +61,7 @@ class HealthCheckMiddleware:
                 raise ValueError("Cache did not return expected value")
         except Exception as e:
             exception = ServiceUnavailable(detail=f"cache unavailable: {e}")
-            return JsonResponse(
-                exception.get_full_details(), status=exception.status_code
-            )
+            return JsonResponse(exception.get_full_details(), status=exception.status_code)
 
         return HttpResponse(status=HTTPStatus.OK)
 
